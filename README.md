@@ -10,10 +10,3 @@
 poetry add git+https://github.com/quanttide/quanttide-data-python.git
 ```
 
-## 测试
-
-在项目根目录运行
-
-```shell
-poetry install --with testing
-```
