@@ -28,7 +28,6 @@ class BaseCrawler(abc.ABC):
         :param request_retry:
         :param request_retry_backoff_factor:
         :param html_parser:
-        :param output_dirname:
         """
         # 请求配置
         self.request_url_prefix = request_url_prefix
