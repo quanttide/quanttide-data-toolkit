@@ -44,7 +44,7 @@ class BaseCrawler(abc.ABC):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
 
-    def set_request_session():
+    def set_request_session(self):
         # 初始化session
         self.session = requests.Session()
         # 请求重试策略
