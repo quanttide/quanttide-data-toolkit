@@ -3,7 +3,6 @@
 爬虫框架
 """
 import abc
-import warnings
 import logging
 from typing import Any, Optional, Union
 import urllib.request
