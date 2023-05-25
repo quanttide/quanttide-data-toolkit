@@ -1,0 +1,27 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "quanttide-data-python"
+version = "0.1.0-alpha.1"
+description = "量潮数据工程Python工具包"
+authors = ["QuantTide <opensource@quanttide.com>"]
+license = "Apache 2.0"
+readme = "README.md"
+packages = [{include = "quanttide_data"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+logdecorator = "^2.4"
+
+[tool.poetry.group.crawler.dependencies]
+urllib3 = "<2.0"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+coverage = "^7.2.6"
