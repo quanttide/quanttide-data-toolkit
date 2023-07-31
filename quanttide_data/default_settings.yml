@@ -1,0 +1,8 @@
+default:
+  # 爬虫
+  CRAWLERS:
+    default:
+      REQUEST_RETRY: 0
+  # 处理器
+  PROCESSORS:
+    default:
