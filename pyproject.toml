@@ -4,12 +4,16 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "quanttide-data"
-version = "0.1.0"
+version = "0.2.0-alpha.1"
 description = "量潮数据工程Python工具包"
 authors = ["QuantTide <opensource@quanttide.com>"]
 license = "Apache 2.0"
 readme = "README.md"
 packages = [{include = "quanttide_data"}]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.7"
