@@ -8,10 +8,6 @@ class BaseProcessor(abc.ABC):
     """
     处理器基类
     """
-
-    def __init__(self):
-        pass
-
     def read(self, *args, **kwargs):
         raise NotImplementedError()
 
@@ -23,3 +19,18 @@ class BaseProcessor(abc.ABC):
 
     def run(self, *args, **kwargs):
         raise NotImplementedError()
+
+
+class Processor(BaseProcessor):
+    """
+    处理器
+    """
+    def read_from_file(self):
+        pass
+
+    def save_to_file(self):
+        pass
+
+    def save_to_sql(self):
+        pass
+
