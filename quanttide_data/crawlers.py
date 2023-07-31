@@ -17,6 +17,23 @@ class BaseCrawler(abc.ABC):
     """
     爬虫基类
     """
+    def request(self, *args, **kwargs) -> Any:
+        raise NotImplementedError()
+
+    def parse(self, *args, **kwargs) -> Any:
+        raise NotImplementedError()
+
+    def save(self, *args, **kwargs) -> Any:
+        raise NotImplementedError()
+
+    def run(self, *args, **kwargs) -> Any:
+        raise NotImplementedError()
+
+
+class Crawler(BaseCrawler):
+    """
+    爬虫
+    """
 
     def __init__(self, request_url_prefix: Optional[str] = None, request_require_proxy: bool = False,
                  request_retry: int = 0, request_retry_backoff_factor: int = 0, html_parser: str = 'lxml'):
@@ -95,12 +112,3 @@ class BaseCrawler(abc.ABC):
 
     def post(self, url, data=None, json=None, **kwargs) -> Any:
         return self.request(method='POST', url=url, data=data, json=json, **kwargs)
-
-    def parse(self, *args, **kwargs) -> Any:
-        raise NotImplementedError()
-
-    def save(self, *args, **kwargs) -> Any:
-        raise NotImplementedError()
-
-    def run(self, *args, **kwargs) -> None:
-        raise NotImplementedError()
