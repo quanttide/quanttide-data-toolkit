@@ -1,6 +1,6 @@
 # `quanttide-data-python`
 
-量潮数据工程Python工具包
+量潮数据工程Python工具箱
 
 ## 安装
 
@@ -16,8 +16,8 @@ pip install quanttide-data
 poetry add quanttide-data
 ```
 
-## 测试
+### 通过`pdm`安装
 
 ```shell
-poetry install
+pdm add quanttide-data
 ```

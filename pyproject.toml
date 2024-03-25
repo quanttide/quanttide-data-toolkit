@@ -1,31 +1,37 @@
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
-[tool.poetry]
+[project]
+authors = [
+    {name = "QuantTide", email = "opensource@quanttide.com"},
+]
+license = {text = "Apache 2.0"}
+requires-python = ">=3.8"
+dependencies = [
+    "pydantic>=2.4.2",
+    "logdecorator>=2.4",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.2",
+]
 name = "quanttide-data"
 version = "0.2.0-alpha.1"
-description = "量潮数据工程Python工具包"
-authors = ["QuantTide <opensource@quanttide.com>"]
-license = "Apache 2.0"
+description = "量潮数据工程Python工具箱"
 readme = "README.md"
-packages = [{include = "quanttide_data"}]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
 ]
 
+[tool.pdm.dev-dependencies]
+dev = [
+    "urllib3<2.0",
+    "pytest>=7.3.1",
+    "coverage>=7.2.6",
+]
 
-[tool.poetry.dependencies]
-python = "^3.7"
-# logging
-logdecorator = "^2.4"
-# crawler
-requests = { version = "^2.31.0"}
-beautifulsoup4 = { version = "^4.12.2"}
+[tool.pdm.build]
+includes = [
+    "quanttide_data",
+]
 
 
-[tool.poetry.group.dev.dependencies]
-# bugfix for poetry
-urllib3 = "<2.0"
-pytest = "^7.3.1"
-coverage = "^7.2.6"
