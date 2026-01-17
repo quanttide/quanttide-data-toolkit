@@ -1,0 +1,23 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "django-quanttide-data"
+version = "0.1.0-alpha.1"
+description = "量潮数据工程Django工具箱"
+authors = [
+    "QuantTide Inc. <opensource@quanttide.com>"
+]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/quanttide/django-quanttide-data"
+repository = "https://github.com/quanttide/django-quanttide-data"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Framework :: Django",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django-quanttide = {git = "https://github.com/quanttide/django-quanttide.git"}

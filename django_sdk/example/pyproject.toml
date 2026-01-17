@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "example"
+version = "0.1.0-alpha.1"
+description = ""
+authors = ["QuantTide Inc. <opensource@quanttide.com>"]
+license = "Apache 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "^4.2.3"
+djangorestframework = "^3.14.0"
+django-quanttide = {git = "https://github.com/quanttide/django-quanttide.git"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
