@@ -1,0 +1,18 @@
+name: pubdev-publish
+on:
+  # https://docs.github.com/cn/actions/using-workflows/events-that-trigger-workflows#release
+  release:
+    types: [published]
+jobs:
+  publishing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'checkout'
+        uses: actions/checkout@v2   # required!
+      - name: 'publish to pub.dev'
+        uses: k-paxian/dart-package-publisher@master
+        with:
+          credentialJson: ${{ secrets.PUBDEV_CREDENTIAL_JSON }}
+          # skipTests: true  # 临时
+          force: true
+          flutter: true
