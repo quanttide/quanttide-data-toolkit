@@ -45,25 +45,24 @@ void main() {
 
   group('Dataset', () {
     test('default status is pending', () {
-      final ds = Dataset(id: '1', name: 'ds1', title: 'DS 1', schemaId: 's1');
+      final ds = Dataset(id: '1', name: 'ds1', title: 'DS 1');
       expect(ds.status, DatasetStatus.pending);
     });
 
     test('default description is empty string', () {
-      final ds = Dataset(id: '1', name: 'ds1', title: 'DS 1', schemaId: 's1');
+      final ds = Dataset(id: '1', name: 'ds1', title: 'DS 1');
       expect(ds.description, '');
     });
 
     test('default timestamps are null', () {
-      final ds = Dataset(id: '1', name: 'ds1', title: 'DS 1', schemaId: 's1');
+      final ds = Dataset(id: '1', name: 'ds1', title: 'DS 1');
       expect(ds.createdAt, isNull);
       expect(ds.updatedAt, isNull);
-      expect(ds.refreshedAt, isNull);
     });
 
     test('can be created with custom status', () {
       final ds = Dataset(
-        id: '1', name: 'ds1', title: 'DS 1', schemaId: 's1',
+        id: '1', name: 'ds1', title: 'DS 1',
         status: DatasetStatus.ready,
       );
       expect(ds.status, DatasetStatus.ready);
@@ -76,21 +75,17 @@ void main() {
         name: 'sales-orders-202605',
         title: '销售订单数据集',
         description: '2026年5月销售订单数据',
-        schemaId: 's-order',
         status: DatasetStatus.ready,
         createdAt: now,
         updatedAt: now,
-        refreshedAt: now,
       );
       expect(ds.id, 'd1');
       expect(ds.name, 'sales-orders-202605');
       expect(ds.title, '销售订单数据集');
       expect(ds.description, '2026年5月销售订单数据');
-      expect(ds.schemaId, 's-order');
       expect(ds.status, DatasetStatus.ready);
       expect(ds.createdAt, now);
       expect(ds.updatedAt, now);
-      expect(ds.refreshedAt, now);
     });
   });
 }

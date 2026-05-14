@@ -4,7 +4,7 @@ import 'package:quanttide_data/quanttide_data.dart';
 class _MockDatasetRepository implements DatasetRepository {
   @override
   Future<Dataset> fetch(String id) async {
-    return Dataset(id: id, name: 'ds-$id', title: 'Dataset $id', schemaId: 's1');
+    return Dataset(id: id, name: 'ds-$id', title: 'Dataset $id');
   }
 }
 
