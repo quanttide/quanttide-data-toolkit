@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import '../../http/api_client.dart';
 import '../schemas/schema.dart';
-import 'package:flutter_quanttide/flutter_quanttide.dart';
 
 
 class DataSchemaRepository {
