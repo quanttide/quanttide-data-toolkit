@@ -26,8 +26,6 @@ dependencies:
   flutter_form_builder: ^9.1.0
   # 表格
   data_table_2: ^2.5.8
-  # QuantTide
-  flutter_quanttide: ^0.2.0-alpha.2
 
 dev_dependencies:
   flutter_test:
