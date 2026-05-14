@@ -1,6 +1,6 @@
 # ROADMAP
 
-> 现状：当前代码为早期建模阶段产物，计划整体重构。
+> 现状：当前代码为早期建模阶段产物，计划整体重构。以下均为重构后的规划。
 
 ### 文档完善
 
@@ -26,9 +26,13 @@
 - [ ] FastAPI 服务端
 - [ ] 跨语言契约测试
 
-### 待清理
+### 已完成的结构整理
 
-- [x] **废弃 django 包**：`packages/django/` 及其 CI 已移除
-- [x] **python 版本回退**：pyproject.toml 从 `0.2.0-alpha.1` 回退到 `0.1.0`，与 CHANGELOG 和 PyPI 一致
-- [x] **flutter 版本统一**：pubspec `0.1.0-alpha.3` → `0.1.0`，CHANGELOG 同步
-- [x] **tag 命名对齐**：已创建 `flutter/v0.1.0`，新 workflow 按前缀过滤正常工作
+- [x] 目录结构对齐：`*_sdk/` → `packages/*/`
+- [x] 根级配置：AGENTS.md、CHANGELOG.md、ROADMAP.md、README.md
+- [x] 废弃 django 包
+- [x] python src layout + uv + hatchling
+- [x] python 版本回退 `0.2.0-alpha.1` → `0.1.0`
+- [x] flutter 版本统一 `0.1.0-alpha.3` → `0.1.0`，发布到 pub.dev
+- [x] CI workflows 拆分与 tag 前缀过滤
+- [x] 子包 AGENTS.md 规范
