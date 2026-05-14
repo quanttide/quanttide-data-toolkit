@@ -6,6 +6,7 @@ monorepo，包含以下子包：
 
 | 目录 | 包名 | 语言 | 定位 |
 |------|------|------|------|
+| `packages/dart/` | `quanttide_data` | Dart | 纯 Dart 数据模型（参考实现） |
 | `packages/python/` | `quanttide-data` | Python | 数据操作 SDK（Pydantic） |
 | `packages/flutter/` | `flutter_quanttide_data` | Dart/Flutter | 数据 UI 组件与 BLoC |
 
