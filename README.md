@@ -8,71 +8,44 @@
 
 ## SDK 列表
 
-### Python SDK (`python_sdk/`)
-
-Python 数据工具包，提供核心的数据操作功能。
-
-- **包名**: `quanttide-data`
-- **主要功能**:
-  - 数据集管理（Datasets）
-  - 数据记录管理（Records）
-  - 数据爬取器（Crawlers）
-  - 数据处理器（Processors）
-  - 配置管理（Config）
-
-- **技术栈**: Python 3.8+, PDM
-
-### Flutter SDK (`flutter_sdk/`)
-
-Flutter 移动端数据工具包，用于移动应用集成。
-
-- **包名**: `flutter_quanttide_data`
-- **主要功能**:
-  - 数据集管理
-  - 数据记录操作
-  - 移动端数据同步
-
-- **技术栈**: Flutter, Dart
-
-### Django SDK (`django_sdk/`)
-
-Django Web 应用数据工具包，提供 Web 后端集成。
-
-- **包名**: `django-quanttide-data`
-- **主要功能**:
-  - Django 模型定义
-  - REST API 序列化器
-  - 管理后台集成
-  - 测试用例
-
-- **技术栈**: Django, Python 3.8+, Poetry
+| 子包 | 包名 | 语言 | 定位 |
+|------|------|------|------|
+| `packages/python/` | `quanttide-data` | Python | 数据操作 SDK（Pydantic 模型） |
+| `packages/django/` | `django-quanttide-data` | Python | Django 模型与 REST API 序列化器 |
+| `packages/flutter/` | `flutter_quanttide_data` | Dart/Flutter | 数据 UI 组件与 BLoC 状态管理 |
 
 ## 项目结构
 
 ```
-toolkit/
-├── python_sdk/           # Python SDK
-│   ├── quanttide_data/
-│   ├── docs/
-│   ├── examples/
-│   ├── tests/
-│   ├── pyproject.toml
-│   └── pdm.lock
-├── flutter_sdk/          # Flutter SDK
-│   ├── lib/
-│   ├── android/
-│   ├── ios/
-│   ├── pubspec.yaml
-│   └── ...
-├── django_sdk/           # Django SDK
-│   ├── django_quanttide_data/
-│   ├── example/
-│   ├── tests/
-│   ├── pyproject.toml
-│   └── poetry.lock
+quanttide-data-toolkit/
+├── AGENTS.md
+├── CHANGELOG.md
+├── ROADMAP.md
+├── README.md
+├── packages/
+│   ├── python/           # Python SDK
+│   │   ├── quanttide_data/
+│   │   ├── tests/
+│   │   ├── examples/
+│   │   ├── docs/
+│   │   ├── pyproject.toml
+│   │   └── pdm.lock
+│   ├── django/           # Django SDK
+│   │   ├── django_quanttide_data/
+│   │   ├── tests/
+│   │   ├── docs/
+│   │   ├── pyproject.toml
+│   │   └── poetry.lock
+│   └── flutter/          # Flutter SDK
+│       ├── lib/
+│       ├── example/
+│       ├── test/
+│       ├── pubspec.yaml
+│       └── ...
 ├── .github/
-├── LICENSE
-└── README.md
+│   └── workflows/
+└── .agents/
+    └── skills/
 ```
 
 ## 快速开始
@@ -80,37 +53,38 @@ toolkit/
 ### Python SDK
 
 ```bash
-cd python_sdk
+cd packages/python
 pdm install
 pdm run python -m quanttide_data
-```
-
-### Flutter SDK
-
-```bash
-cd flutter_sdk
-flutter pub get
-flutter run
 ```
 
 ### Django SDK
 
 ```bash
-cd django_sdk/example
+cd packages/django
 poetry install
-python manage.py migrate
-python manage.py runserver
+python runtests.py
+```
+
+### Flutter SDK
+
+```bash
+cd packages/flutter
+flutter pub get
+flutter run
 ```
 
 ## 开发指南
 
 ### SDK 管理
 
-各 SDK 的代码已集成到此 monorepo 中，不再使用 subtree 或 submodule 方式管理。如果需要同步变更到原仓库，请手动复制相关文件。
+各 SDK 的代码已集成到此 monorepo 中，不再使用 subtree 或 submodule 方式管理。
 
 ### 版本管理
 
 各 SDK 保持独立的版本管理，遵循语义化版本规范（SemVer）。
+
+参见各子包 `AGENTS.md` 了解具体的提交消息规范和发布流程。
 
 ## 许可证
 
