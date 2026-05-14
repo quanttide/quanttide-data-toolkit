@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [0.2.0] - 2026-05-14
+
+- 破坏性变更：PipelineBloc 事件参数从 `Pipeline` 改为 `String pipelineId`
+- 破坏性变更：PipelineBloc 构造器新增必选 `PipelineRepository repository` 参数
+- 新增 Dataset 模型与 DatasetBloc
+- 新增 PipelineRepository / DatasetRepository 抽象接口
+- 新增审计字段（createdAt / updatedAt / refreshedAt）
+- 文档重组（models/blocs/repositories 分目录）
+
 ## [0.1.1] - 2026-05-14
 
 - 新增 PipelineBloc（bloc 状态管理）

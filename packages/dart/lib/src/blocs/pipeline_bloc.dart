@@ -4,21 +4,18 @@ import 'package:quanttide_data/quanttide_data.dart';
 sealed class PipelineEvent {}
 
 class LoadPipeline extends PipelineEvent {
-  final Pipeline pipeline;
-
-  LoadPipeline(this.pipeline);
+  final String pipelineId;
+  LoadPipeline(this.pipelineId);
 }
 
 class RefreshPipeline extends PipelineEvent {
-  final Pipeline pipeline;
-
-  RefreshPipeline(this.pipeline);
+  final String pipelineId;
+  RefreshPipeline(this.pipelineId);
 }
 
 class RetryPipeline extends PipelineEvent {
-  final Pipeline pipeline;
-
-  RetryPipeline(this.pipeline);
+  final String pipelineId;
+  RetryPipeline(this.pipelineId);
 }
 
 sealed class PipelineState {}
@@ -29,35 +26,61 @@ class PipelineLoading extends PipelineState {}
 
 class PipelineLoaded extends PipelineState {
   final Pipeline pipeline;
-
   PipelineLoaded(this.pipeline);
 }
 
 class PipelineLoadFailed extends PipelineState {
   final String message;
-
   PipelineLoadFailed(this.message);
 }
 
 class PipelineBloc extends Bloc<PipelineEvent, PipelineState> {
-  PipelineBloc() : super(PipelineInitial()) {
+  final PipelineRepository _repository;
+
+  PipelineBloc({required PipelineRepository repository})
+    : _repository = repository,
+      super(PipelineInitial()) {
     on<LoadPipeline>(_onLoadPipeline);
     on<RefreshPipeline>(_onRefreshPipeline);
     on<RetryPipeline>(_onRetryPipeline);
   }
 
-  void _onLoadPipeline(LoadPipeline event, Emitter<PipelineState> emit) {
+  Future<void> _onLoadPipeline(
+    LoadPipeline event,
+    Emitter<PipelineState> emit,
+  ) async {
     emit(PipelineLoading());
-    emit(PipelineLoaded(event.pipeline));
+    try {
+      final pipeline = await _repository.fetch(event.pipelineId);
+      emit(PipelineLoaded(pipeline));
+    } catch (e) {
+      emit(PipelineLoadFailed(e.toString()));
+    }
   }
 
-  void _onRefreshPipeline(RefreshPipeline event, Emitter<PipelineState> emit) {
+  Future<void> _onRefreshPipeline(
+    RefreshPipeline event,
+    Emitter<PipelineState> emit,
+  ) async {
     emit(PipelineLoading());
-    emit(PipelineLoaded(event.pipeline));
+    try {
+      final pipeline = await _repository.fetch(event.pipelineId);
+      emit(PipelineLoaded(pipeline));
+    } catch (e) {
+      emit(PipelineLoadFailed(e.toString()));
+    }
   }
 
-  void _onRetryPipeline(RetryPipeline event, Emitter<PipelineState> emit) {
+  Future<void> _onRetryPipeline(
+    RetryPipeline event,
+    Emitter<PipelineState> emit,
+  ) async {
     emit(PipelineLoading());
-    emit(PipelineLoaded(event.pipeline));
+    try {
+      final pipeline = await _repository.fetch(event.pipelineId);
+      emit(PipelineLoaded(pipeline));
+    } catch (e) {
+      emit(PipelineLoadFailed(e.toString()));
+    }
   }
 }

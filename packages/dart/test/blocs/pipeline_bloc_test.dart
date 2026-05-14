@@ -1,24 +1,37 @@
 import 'package:test/test.dart';
 import 'package:quanttide_data/quanttide_data.dart';
 
+class _MockPipelineRepository implements PipelineRepository {
+  @override
+  Future<Pipeline> fetch(String id) async {
+    return Pipeline(
+      id: id,
+      name: 'pipeline-$id',
+      title: 'Pipeline $id',
+      tasks: [Task(id: 't1', name: 'task1', title: 'Task 1')],
+    );
+  }
+}
+
+class _FailingPipelineRepository implements PipelineRepository {
+  @override
+  Future<Pipeline> fetch(String id) async {
+    throw Exception('fetch failed');
+  }
+}
+
 void main() {
   group('PipelineBloc', () {
     test('initial state is PipelineInitial', () {
-      final bloc = PipelineBloc();
+      final bloc = PipelineBloc(repository: _MockPipelineRepository());
       expect(bloc.state, isA<PipelineInitial>());
       bloc.close();
     });
 
     test('LoadPipeline emits Loading then Loaded', () async {
-      final bloc = PipelineBloc();
-      final pipeline = Pipeline(
-        id: '1',
-        name: 'test-pipeline',
-        title: 'Test Pipeline',
-        tasks: [Task(id: 't1', name: 'task1', title: 'Task 1')],
-      );
+      final bloc = PipelineBloc(repository: _MockPipelineRepository());
 
-      bloc.add(LoadPipeline(pipeline));
+      bloc.add(LoadPipeline('1'));
       await expectLater(
         bloc.stream,
         emitsInOrder([
@@ -36,21 +49,10 @@ void main() {
     });
 
     test('LoadPipeline replaces existing state', () async {
-      final bloc = PipelineBloc();
-      final pipeline1 = Pipeline(
-        id: '1',
-        name: 'first',
-        title: 'First',
-        tasks: [Task(id: 't1', name: 'task1', title: 'Task 1')],
-      );
-      final pipeline2 = Pipeline(
-        id: '2',
-        name: 'second',
-        title: 'Second',
-        tasks: [Task(id: 't2', name: 'task2', title: 'Task 2')],
-      );
+      final repo = _MockPipelineRepository();
+      final bloc = PipelineBloc(repository: repo);
 
-      bloc.add(LoadPipeline(pipeline1));
+      bloc.add(LoadPipeline('1'));
       await expectLater(
         bloc.stream,
         emitsInOrder([
@@ -59,7 +61,7 @@ void main() {
         ]),
       );
 
-      bloc.add(LoadPipeline(pipeline2));
+      bloc.add(LoadPipeline('2'));
       await expectLater(
         bloc.stream,
         emitsInOrder([
@@ -74,16 +76,25 @@ void main() {
       bloc.close();
     });
 
-    test('RefreshPipeline emits Loading then Loaded', () async {
-      final bloc = PipelineBloc();
-      final pipeline = Pipeline(
-        id: '1',
-        name: 'refresh-pipeline',
-        title: 'Refreshed',
-        tasks: [],
+    test('LoadPipeline emits LoadFailed on error', () async {
+      final bloc = PipelineBloc(repository: _FailingPipelineRepository());
+
+      bloc.add(LoadPipeline('1'));
+      await expectLater(
+        bloc.stream,
+        emitsInOrder([
+          isA<PipelineLoading>(),
+          isA<PipelineLoadFailed>(),
+        ]),
       );
 
-      bloc.add(RefreshPipeline(pipeline));
+      bloc.close();
+    });
+
+    test('RefreshPipeline emits Loading then Loaded', () async {
+      final bloc = PipelineBloc(repository: _MockPipelineRepository());
+
+      bloc.add(RefreshPipeline('1'));
       await expectLater(
         bloc.stream,
         emitsInOrder([
@@ -96,15 +107,9 @@ void main() {
     });
 
     test('RetryPipeline emits Loading then Loaded', () async {
-      final bloc = PipelineBloc();
-      final pipeline = Pipeline(
-        id: '1',
-        name: 'retry-pipeline',
-        title: 'Retried',
-        tasks: [],
-      );
+      final bloc = PipelineBloc(repository: _MockPipelineRepository());
 
-      bloc.add(RetryPipeline(pipeline));
+      bloc.add(RetryPipeline('1'));
       await expectLater(
         bloc.stream,
         emitsInOrder([
