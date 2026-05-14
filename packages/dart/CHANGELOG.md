@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.3.0] - 2026-05-14
+
+- 破坏性变更：移除 Dataset 的 schemaId、refreshedAt 字段
+
 ## [0.2.0] - 2026-05-14
 
 - 破坏性变更：PipelineBloc 事件参数从 `Pipeline` 改为 `String pipelineId`
