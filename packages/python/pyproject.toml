@@ -1,13 +1,13 @@
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 authors = [
     {name = "QuantTide", email = "opensource@quanttide.com"},
 ]
 license = {text = "Apache 2.0"}
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.4.2",
     "logdecorator>=2.4",
@@ -22,16 +22,17 @@ classifiers = [
     "Development Status :: 2 - Pre-Alpha",
 ]
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "urllib3<2.0",
     "pytest>=7.3.1",
     "coverage>=7.2.6",
 ]
 
-[tool.pdm.build]
-includes = [
-    "quanttide_data",
-]
+[tool.hatch.build.targets.wheel]
+packages = ["src/quanttide_data"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
 
 
