@@ -30,5 +30,5 @@
 
 - [x] **废弃 django 包**：`packages/django/` 及其 CI 已移除
 - [x] **python 版本回退**：pyproject.toml 从 `0.2.0-alpha.1` 回退到 `0.1.0`，与 CHANGELOG 和 PyPI 一致
-- [ ] **flutter CHANGELOG 更新**：pubspec `0.1.0-alpha.3` 但 CHANGELOG 只记了 `0.1.0`
+- [x] **flutter 版本统一**：pubspec `0.1.0-alpha.3` → `0.1.0`，CHANGELOG 同步
 - [ ] **tag 命名对齐**：旧 tag 无前缀，新 workflow 按 `python/`、`flutter/` 过滤，需确认发布策略
