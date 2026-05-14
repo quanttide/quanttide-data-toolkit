@@ -25,20 +25,19 @@
 
 ### 任务状态`TaskStatus`
 
-枚举值
+枚举值。属性包括：
 
-| 枚举值 | `label` | `color` | 语义 |
-|--------|---------|---------|------|
-| `pending` | 就绪 | `0xFF9CA3AF` | 未开始 |
-| `inProgress` | 进行中 | `0xFF2563EB` | 执行中（机器/AI/人） |
-| `completed` | 达标 | `0xFF16A34A` | 成功完成 |
-| `failed` | 异常 | `0xFFDC2626` | 执行错误 |
-| `rejected` | 驳回 | `0xFFD97706` | AI 输出不达标/人工退回 |
-| `cancelled` | 取消 | `0xFF6B7280` | 主动取消 |
+- 名称`name`（`String`）：采用通用项目管理风格，不绑定特定执行者类型——用 `inProgress` 而非 `running` 以覆盖机器、AI、人三种场景，用 `failed`/`rejected` 区分系统执行错误与业务结果不达标。
+- 标签`label`（`String`）：人类可读的状态名，如 `就绪`、`进行中`、`达标`、`异常`、`驳回`、`取消`。
+- 颜色`color` （`int`）：。灰度设计上 `pending`（浅灰，未激活）与 `cancelled`（深灰，已结束）共用灰色系、明度不同；三种负面状态用不同色相：`failed` 红（错误）、`rejected` 橙（否决）、`cancelled` 灰（取消）。widget 层按需转为 `Color(color)` 并自行计算透明度。
 
-`color` 是原始 `int`，不依赖 Flutter `Color` 类。widget 层按需转为 `Color(color)` 并自行计算透明度（如边框用 20% 不透明度）。
+标准属性如下：
 
-设计要点：
-- `pending` 和 `cancelled` 共用灰色系，明度不同。pending 较浅（未激活），cancelled 较深（已结束）。
-- 三种负面状态用不同色相：`failed` 红（错误）、`rejected` 橙（否决）、`cancelled` 灰（取消）。
-- `inProgress` 比 `running` 语义更广，覆盖机器/人/AI 三种执行者。
+| `name` | `label` | `color` |
+|--------|---------|---------|
+| `pending` | 就绪 | `0xFF9CA3AF` |
+| `inProgress` | 进行中 | `0xFF2563EB` |
+| `completed` | 达标 | `0xFF16A34A` |
+| `failed` | 异常 | `0xFFDC2626` |
+| `rejected` | 驳回 | `0xFFD97706` |
+| `cancelled` | 取消 | `0xFF6B7280` |
