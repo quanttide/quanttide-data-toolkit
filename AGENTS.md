@@ -7,7 +7,6 @@ monorepo，包含以下子包：
 | 目录 | 包名 | 语言 | 定位 |
 |------|------|------|------|
 | `packages/python/` | `quanttide-data` | Python | 数据操作 SDK（Pydantic） |
-| `packages/django/` | `django-quanttide-data` | Python | Django 模型与序列化器 |
 | `packages/flutter/` | `flutter_quanttide_data` | Dart/Flutter | 数据 UI 组件与 BLoC |
 
 语言/包特定约定见各子包 `AGENTS.md`。
@@ -38,7 +37,7 @@ monorepo，包含以下子包：
 
 ### CI 自动发布
 
-Python/Django 包的 PyPI 发布由 GitHub Release `published` 事件触发，workflow 内以 `startsWith(github.ref, 'refs/tags/<name>/')` 过滤。
+Python 包的 PyPI 发布由 GitHub Release `published` 事件触发，workflow 内以 `startsWith(github.ref, 'refs/tags/<name>/')` 过滤。
 
 ### 从 CHANGELOG 提取 Release Notes
 

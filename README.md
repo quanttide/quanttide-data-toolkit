@@ -11,7 +11,6 @@
 | 子包 | 包名 | 语言 | 定位 |
 |------|------|------|------|
 | `packages/python/` | `quanttide-data` | Python | 数据操作 SDK（Pydantic 模型） |
-| `packages/django/` | `django-quanttide-data` | Python | Django 模型与 REST API 序列化器 |
 | `packages/flutter/` | `flutter_quanttide_data` | Dart/Flutter | 数据 UI 组件与 BLoC 状态管理 |
 
 ## 项目结构
@@ -30,12 +29,6 @@ quanttide-data-toolkit/
 │   │   ├── docs/
 │   │   ├── pyproject.toml
 │   │   └── pdm.lock
-│   ├── django/           # Django SDK
-│   │   ├── django_quanttide_data/
-│   │   ├── tests/
-│   │   ├── docs/
-│   │   ├── pyproject.toml
-│   │   └── poetry.lock
 │   └── flutter/          # Flutter SDK
 │       ├── lib/
 │       ├── example/
@@ -56,14 +49,6 @@ quanttide-data-toolkit/
 cd packages/python
 pdm install
 pdm run python -m quanttide_data
-```
-
-### Django SDK
-
-```bash
-cd packages/django
-poetry install
-python runtests.py
 ```
 
 ### Flutter SDK
