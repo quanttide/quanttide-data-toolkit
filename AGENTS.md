@@ -6,9 +6,11 @@ monorepo，包含以下子包：
 
 | 目录 | 包名 | 语言 | 定位 |
 |------|------|------|------|
-| `packages/dart/` | `quanttide_data` | Dart | 纯 Dart 数据模型（参考实现） |
+| `packages/dart/` | `quanttide_data` | Dart | 纯 Dart 数据模型（参考实现），以发布 v0.1.0，100% 测试覆盖 |
 | `packages/python/` | `quanttide-data` | Python | 数据操作 SDK（Pydantic） |
 | `packages/flutter/` | `flutter_quanttide_data` | Dart/Flutter | 数据 UI 组件与 BLoC |
+
+> **建模时期说明**：`dart/` 与 `python/`、`flutter/` 非同期开发。dart 包于 2026-05 新建，建模风格和文档组织方式与早期包存在差异，不应将 dart 包的写法视为对前两者的纠正。各包独立演进。引用时应指明上下文，如"dart 包中 TaskStatus 的建模方式"。
 
 语言/包特定约定见各子包 `AGENTS.md`。
 
@@ -38,7 +40,9 @@ monorepo，包含以下子包：
 
 ### CI 自动发布
 
-Python 包的 PyPI 发布由 GitHub Release `published` 事件触发，workflow 内以 `startsWith(github.ref, 'refs/tags/<name>/')` 过滤。
+- Python 包：PyPI 发布由 GitHub Release `published` 事件触发，tag 前缀 `python/`
+- Dart 包：pub.dev 发布由 GitHub Release `published` 事件触发，tag 前缀 `dart/`
+- Flutter 包：pub.dev 发布由 GitHub Release `published` 事件触发，tag 前缀 `flutter/`
 
 ### 从 CHANGELOG 提取 Release Notes
 
