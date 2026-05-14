@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
   # QuantTide
-  flutter_quanttide: ^0.2.0-alpha.2
   flutter_quanttide_data:
     path: ..
 
