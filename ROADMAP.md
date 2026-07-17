@@ -36,3 +36,10 @@
 - [x] flutter 版本统一 `0.1.0-alpha.3` → `0.1.0`，发布到 pub.dev
 - [x] CI workflows 拆分与 tag 前缀过滤
 - [x] 子包 AGENTS.md 规范
+
+### Rust 包
+
+- [ ] 创建 `packages/rust/` 目录
+- [ ] Blueprint 数据模型（`#Blueprint`, `#Pipeline`, `#Step`, `#Contract`）
+- [ ] CUE ↔ Rust struct 序列化
+- [ ] 单元测试（fixture: profile/ghtorrent/blueprint.cue）
