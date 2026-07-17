@@ -5,6 +5,50 @@
 
 ---
 
+## 交付边界（必读）
+
+### 允许创建/修改的文件
+
+```
+Cargo.toml               ← 新增
+src/lib.rs               ← 新增，pub mod 导出所有子模块
+src/types/mod.rs         ← 新增
+src/types/blueprint.rs   ← 新增
+src/types/pipeline.rs    ← 新增
+src/types/contract.rs    ← 新增
+src/types/datasource.rs  ← 新增
+src/types/cloud.rs       ← 新增
+src/types/status.rs      ← 新增
+src/types/deliverable.rs ← 新增
+src/serde/mod.rs         ← 新增
+src/serde/cue/mod.rs     ← 新增
+src/serde/cue/from_cue.rs← 新增
+src/serde/cue/to_cue.rs  ← 新增
+src/validate.rs          ← 新增
+src/error.rs             ← 新增（CueParseError, ValidationError）
+README.md                ← 新增
+CHANGELOG.md             ← 新增
+```
+
+### 禁止操作
+
+- **禁止创建** src/ 下的其他文件（不在上述列表的）
+- **禁止修改** packages/flutter/、packages/dart/、packages/python/ 下的任何文件
+- **禁止修改** 仓库根级文件（AGENTS.md、ROADMAP.md 等，交付时统一更新）
+- **禁止创建** examples/、benches/ 目录（本期不需要）
+
+### 测试 fixture 路径
+
+测试使用只读 fixture，**禁止修改**这些文件：
+- `../../data/profile/ghtorrent/blueprint.cue`
+- `../../data/profile/sec-credit-agreement/blueprint.cue`
+
+### 交付验证
+
+每完成一个模块，运行 `cargo test && cargo clippy && cargo fmt --check && cargo doc` 确认通过。
+
+---
+
 ## 1. 项目脚手架
 
 - [ ] `Cargo.toml` — 包名、版本、依赖
