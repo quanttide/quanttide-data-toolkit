@@ -27,6 +27,7 @@ pub struct Blueprint {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    #[serde(default)]
     pub contract: ContractPair,
     pub pipeline: Pipeline,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -40,9 +41,11 @@ pub struct Blueprint {
     pub updated_at: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
 pub struct ContractPair {
+    #[serde(default)]
     pub input: Contract,
+    #[serde(default)]
     pub output: Contract,
 }
 
