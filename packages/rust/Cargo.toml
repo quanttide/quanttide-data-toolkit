@@ -1,5 +1,5 @@
 [package]
-name = "quanttide-data-core"
+name = "quanttide-data"
 version = "0.1.0"
 edition = "2021"
 authors = ["QuantTide Inc. <opensource@quanttide.com>"]
