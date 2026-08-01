@@ -46,8 +46,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "quanttide-data-core"
-version = "0.1.0-alpha.1"
+name = "quanttide-data"
+version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",
