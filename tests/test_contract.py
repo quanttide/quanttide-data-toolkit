@@ -42,6 +42,23 @@ def test_blueprint_fixture_structure():
     assert steps[2]["depends"] == ["collect_list"]
 
 
+def test_specification_fixture_three_part():
+    """Specification 三分契约（对齐 Rust 契约测试）。"""
+    spec = load_fixture("specification.yaml")
+    assert spec["api_version"] == "qtcloud.quanttide.com/v1alpha1"
+    assert spec["kind"] == "Specification"
+    assert spec["metadata"]["name"] == "xmucpp"
+    # 三分平级：contract + blueprint + pipeline
+    assert spec["spec"]["contract"]["input"]["schema"]
+    assert spec["spec"]["blueprint"]["name"] == "xmucpp"
+    pipeline = spec["spec"]["pipeline"]
+    assert pipeline["start_at"] == "categorize"
+    assert len(pipeline["states"]) == 3
+    # 状态机 next 链
+    assert pipeline["states"]["categorize"]["next"] == "collect_list"
+    assert pipeline["states"]["collect_detail"].get("next") is None
+
+
 def test_blueprint_fixture_roundtrip():
     """Python 侧往返：dump → load 一致（契约稳定性）。"""
     bp = load_fixture("blueprint.yaml")

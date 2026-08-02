@@ -6,15 +6,16 @@
 
 | 文件 | 结构 | 用途 |
 |------|------|------|
-| `blueprint.yaml` | Blueprint v1（当前模型，含 contract/pipeline/steps/status） | Rust 已落地契约测试 |
-| （阶段 1/2 后）`specification.v1.yaml` | Specification 三分（contract/blueprint/pipeline 平级） | 模型重构后的契约 |
+| `blueprint.yaml` | Blueprint（含 contract/pipeline/steps/status） | 列表模型契约 |
+| `specification.yaml` | **Specification 三分**（contract + blueprint + pipeline 平级，pipeline 状态机） | 阶段 1 新模型契约（Rust 12 tests 已落地） |
 
 ## 各语言实现状态
 
 | 语言 | 位置 | 状态 |
 |------|------|------|
-| **Rust** | `packages/rust/tests/contract_test.rs` | ✅ 已落地（4 tests） |
-| Python | `packages/python/tests/` | ⏳ 待实现（v0.2.0 阶段 4） |
+| **Rust** | `packages/rust/tests/contract_test.rs` | ✅ 已落地（12 tests：blueprint 8 + specification 4） |
+| Python（主仓 pytest） | `tests/test_contract.py` | ✅ 已落地（4 tests：blueprint 3 + specification 1） |
+| Python SDK | `packages/python/tests/` | ⏳ 待实现（v0.2.0 阶段 4） |
 | Flutter/Dart | `packages/flutter/`、`packages/dart/` | ⏳ 待实现（v0.2.0 阶段 4） |
 
 ## 使用

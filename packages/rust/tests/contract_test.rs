@@ -3,7 +3,12 @@
 //! 契约 fixture 是跨语言共享的事实源（`../../tests/contract/`），各语言 SDK
 //! 用同一份 YAML 解析并断言一致——本文件是 Rust 侧实现，python/flutter/dart 随后对齐。
 
-use quanttide_data::Blueprint;
+use quanttide_data::{Blueprint, Specification};
+
+fn specification_fixture() -> String {
+    std::fs::read_to_string("../../tests/contract/specification.yaml")
+        .expect("契约 fixture 缺失：../../tests/contract/specification.yaml")
+}
 
 fn contract_fixture() -> String {
     std::fs::read_to_string("../../tests/contract/blueprint.yaml")
@@ -104,6 +109,72 @@ future_field: { nested: true }
 "#;
     let bp: Blueprint = serde_yaml::from_str(yaml).expect("未知字段应被忽略");
     assert_eq!(bp.name, "evolve");
+}
+
+#[test]
+fn specification_three_part_parses() {
+    // Specification 三分：contract + blueprint + pipeline 平级
+    let yaml = specification_fixture();
+    let spec: Specification = serde_yaml::from_str(&yaml).expect("specification.yaml 应可解析");
+    assert_eq!(spec.api_version, "qtcloud.quanttide.com/v1alpha1");
+    assert_eq!(spec.kind, "Specification");
+    assert_eq!(spec.metadata.name, "xmucpp");
+    assert_eq!(spec.metadata.generated_by, "qtcloud-data-cli");
+    // 三分都有内容
+    assert!(!spec.spec.contract.input.schema.is_empty());
+    assert_eq!(spec.spec.blueprint.name, "xmucpp");
+    assert_eq!(spec.spec.blueprint.pipeline.steps.len(), 3);
+    assert_eq!(spec.spec.pipeline.start_at, "categorize");
+}
+
+#[test]
+fn specification_pipeline_state_machine() {
+    let yaml = specification_fixture();
+    let spec: Specification = serde_yaml::from_str(&yaml).unwrap();
+    let states = &spec.spec.pipeline.states;
+    assert_eq!(states.len(), 3);
+    // 顺序 next 串联（此前 wrap 静默丢的字段现在保留）
+    assert_eq!(states["categorize"].next.as_deref(), Some("collect_list"));
+    assert_eq!(
+        states["collect_list"].next.as_deref(),
+        Some("collect_detail")
+    );
+    assert_eq!(states["collect_detail"].next, None);
+    // choice 分支（condition）
+    assert!(states["collect_list"].condition.is_some());
+    // 资源类型
+    assert_eq!(states["categorize"].resource, "builtin:copy");
+}
+
+#[test]
+fn specification_projection_consistency() {
+    // 投影一致性：pipeline 状态机与 blueprint steps 一一对应
+    let yaml = specification_fixture();
+    let spec: Specification = serde_yaml::from_str(&yaml).unwrap();
+    let step_names: Vec<&str> = spec
+        .spec
+        .blueprint
+        .pipeline
+        .steps
+        .iter()
+        .map(|s| s.name.as_str())
+        .collect();
+    for name in &step_names {
+        assert!(
+            spec.spec.pipeline.states.contains_key(*name),
+            "state 缺失: {name}"
+        );
+    }
+    assert_eq!(spec.spec.pipeline.states.len(), step_names.len());
+}
+
+#[test]
+fn specification_roundtrip() {
+    let yaml = specification_fixture();
+    let spec: Specification = serde_yaml::from_str(&yaml).unwrap();
+    let out = serde_yaml::to_string(&spec).unwrap();
+    let spec2: Specification = serde_yaml::from_str(&out).unwrap();
+    assert_eq!(spec, spec2);
 }
 
 #[test]
