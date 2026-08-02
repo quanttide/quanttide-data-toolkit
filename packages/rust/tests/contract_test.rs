@@ -24,7 +24,6 @@ fn blueprint_from_fixture() -> Blueprint {
 fn specification_parses() {
     let yaml = specification_fixture();
     let spec: Specification = serde_yaml::from_str(&yaml).expect("specification.yaml 应可解析");
-    assert_eq!(spec.schema_version, "3.1.0");
     assert_eq!(spec.metadata.name, "xmucpp");
     assert_eq!(spec.metadata.version, "1.0.0");
     assert_eq!(spec.metadata.description.as_deref(), Some("电商价格数据库"));

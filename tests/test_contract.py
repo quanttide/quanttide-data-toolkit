@@ -25,7 +25,6 @@ def test_fixtures_are_valid_yaml():
 def test_specification_envelope():
     """envelope：schema_version + metadata。"""
     spec = load_fixture("specification.yaml")
-    assert spec["schema_version"] == "3.1.0"
     assert spec["metadata"]["name"] == "xmucpp"
     assert spec["metadata"]["version"] == "1.0.0"
     assert spec["metadata"]["description"] == "电商价格数据库"

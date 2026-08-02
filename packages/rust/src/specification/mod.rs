@@ -26,11 +26,9 @@ pub struct SpecificationContent {
     pub blueprint: blueprint::Blueprint,
 }
 
-/// Specification envelope（schema_version + metadata + spec 三分内容）。
+/// Specification envelope（metadata + spec 内容）。
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Specification {
-    /// 结构版本（Schema 约定版本）
-    pub schema_version: String,
     pub metadata: SpecificationMetadata,
     pub spec: SpecificationContent,
 }
@@ -42,7 +40,6 @@ impl Specification {
         blueprint: blueprint::Blueprint,
     ) -> Self {
         Self {
-            schema_version: "3.1.0".to_string(),
             metadata,
             spec: SpecificationContent {
                 contract,
@@ -102,7 +99,6 @@ mod tests {
             ContractPair::default(),
             bp,
         );
-        assert_eq!(spec.schema_version, "3.1.0");
         assert_eq!(spec.metadata.name, "xmucpp");
         assert_eq!(spec.metadata.version, "1.0.0");
         assert_eq!(spec.metadata.description.as_deref(), Some("电商价格数据库"));
@@ -121,8 +117,7 @@ mod tests {
         let yaml = serde_yaml::to_string(&spec).unwrap();
         let back: Specification = serde_yaml::from_str(&yaml).unwrap();
         assert_eq!(spec, back);
-        // schema_version + metadata + contract/blueprint 在序列化中保留
-        assert!(yaml.contains("schema_version: 3.1.0"));
+        // metadata + contract/blueprint 在序列化中保留
         assert!(yaml.contains("metadata:"));
         assert!(yaml.contains("contract:"));
         assert!(yaml.contains("blueprint:"));
