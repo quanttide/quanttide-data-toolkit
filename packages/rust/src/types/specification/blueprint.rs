@@ -67,13 +67,13 @@ pub struct OriginalRequirementsRecord {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::cloud::{ChunkedUpload, CloudPlan, CloudServer};
-    use crate::types::contract::Contract;
+    use crate::types::delivery::cloud::{ChunkedUpload, CloudPlan, CloudServer};
+    use crate::types::specification::contract::Contract;
 
-    use crate::types::deliverable::Deliverable;
-    use crate::types::deliverable::Deliverables;
-    use crate::types::pipeline::{Pipeline, Step};
-    use crate::types::status::Status;
+    use crate::types::delivery::deliverable::Deliverable;
+    use crate::types::delivery::deliverable::Deliverables;
+    use crate::types::execution::status::Status;
+    use crate::types::specification::pipeline::{Pipeline, Step};
 
     fn make_test_blueprint() -> Blueprint {
         Blueprint {

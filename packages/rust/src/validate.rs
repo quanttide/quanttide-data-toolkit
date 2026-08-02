@@ -73,10 +73,10 @@ pub fn validate(blueprint: &Blueprint) -> Result<(), Vec<ValidationError>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::blueprint::{Blueprint, ContractPair};
-    use crate::types::contract::Contract;
     use crate::types::execution::status::Status;
-    use crate::types::pipeline::{Pipeline, Step};
+    use crate::types::specification::blueprint::{Blueprint, ContractPair};
+    use crate::types::specification::contract::Contract;
+    use crate::types::specification::pipeline::{Pipeline, Step};
 
     fn make_blueprint() -> Blueprint {
         Blueprint {
