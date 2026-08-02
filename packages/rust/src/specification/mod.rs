@@ -50,21 +50,11 @@ impl Specification {
 
     /// 从蓝图投影构造：blueprint + steps → pipeline 状态机，组合为 Specification。
     pub fn from_blueprint(
-        name: impl Into<String>,
-        version: impl Into<String>,
-        description: Option<String>,
+        metadata: SpecificationMetadata,
         contract: contract::ContractPair,
         blueprint: blueprint::Blueprint,
     ) -> Self {
-        Self::new(
-            SpecificationMetadata {
-                name: name.into(),
-                version: version.into(),
-                description,
-            },
-            contract,
-            blueprint,
-        )
+        Self::new(metadata, contract, blueprint)
     }
 }
 
@@ -77,8 +67,6 @@ mod tests {
 
     fn sample_blueprint() -> Blueprint {
         Blueprint {
-            name: "xmucpp".into(),
-            description: Some("电商价格数据库".into()),
             steps: vec![Step {
                 name: "categorize".into(),
                 from: "raw_records".into(),
@@ -93,9 +81,11 @@ mod tests {
     fn test_specification_three_part_structure() {
         let bp = sample_blueprint();
         let spec = Specification::from_blueprint(
-            "xmucpp",
-            "1.0.0",
-            Some("电商价格数据库".to_string()),
+            SpecificationMetadata {
+                name: "xmucpp".into(),
+                version: "1.0.0".into(),
+                description: Some("电商价格数据库".to_string()),
+            },
             ContractPair::default(),
             bp,
         );
@@ -103,7 +93,6 @@ mod tests {
         assert_eq!(spec.metadata.version, "1.0.0");
         assert_eq!(spec.metadata.description.as_deref(), Some("电商价格数据库"));
         // 三分平级
-        assert_eq!(spec.spec.blueprint.name, "xmucpp");
         assert_eq!(spec.spec.blueprint.steps.len(), 1);
         // contract 独立于 blueprint
         assert_eq!(spec.spec.contract.input.schema, "");
@@ -112,8 +101,15 @@ mod tests {
     #[test]
     fn test_specification_roundtrip() {
         let bp = sample_blueprint();
-        let spec =
-            Specification::from_blueprint("xmucpp", "1.0.0", None, ContractPair::default(), bp);
+        let spec = Specification::from_blueprint(
+            SpecificationMetadata {
+                name: "xmucpp".into(),
+                version: "1.0.0".into(),
+                description: None,
+            },
+            ContractPair::default(),
+            bp,
+        );
         let yaml = serde_yaml::to_string(&spec).unwrap();
         let back: Specification = serde_yaml::from_str(&yaml).unwrap();
         assert_eq!(spec, back);

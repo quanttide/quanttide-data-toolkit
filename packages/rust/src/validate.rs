@@ -17,14 +17,6 @@ use crate::specification::blueprint::Blueprint;
 pub fn validate(blueprint: &Blueprint) -> Result<(), Vec<ValidationError>> {
     let mut errors = Vec::new();
 
-    // Name must be non-empty
-    if blueprint.name.is_empty() {
-        errors.push(ValidationError {
-            field: "name".into(),
-            message: "Blueprint name must not be empty".into(),
-        });
-    }
-
     // Steps must be non-empty
     if blueprint.steps.is_empty() {
         errors.push(ValidationError {
@@ -63,8 +55,6 @@ mod tests {
 
     fn make_blueprint() -> Blueprint {
         Blueprint {
-            name: "test-blueprint".into(),
-            description: None,
             steps: vec![
                 Step {
                     name: "s1".into(),
@@ -91,14 +81,6 @@ mod tests {
     }
 
     #[test]
-    fn test_empty_name_fails() {
-        let mut bp = make_blueprint();
-        bp.name = "".into();
-        let errs = validate(&bp).unwrap_err();
-        assert!(errs.iter().any(|e| e.field == "name"));
-    }
-
-    #[test]
     fn test_broken_dependency_fails() {
         let mut bp = make_blueprint();
         bp.steps[1].depends = Some(vec!["nonexistent".into()]);
@@ -108,11 +90,7 @@ mod tests {
 
     #[test]
     fn test_empty_steps_fails() {
-        let bp = Blueprint {
-            name: "empty".into(),
-            description: None,
-            steps: vec![],
-        };
+        let bp = Blueprint { steps: vec![] };
         let errs = validate(&bp).unwrap_err();
         assert!(errs.iter().any(|e| e.field == "steps"));
     }
@@ -120,8 +98,6 @@ mod tests {
     #[test]
     fn test_no_depends_passes() {
         let bp = Blueprint {
-            name: "single".into(),
-            description: None,
             steps: vec![Step {
                 name: "s1".into(),
                 from: "a".into(),

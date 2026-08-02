@@ -30,7 +30,6 @@ fn specification_parses() {
     // contract + blueprint 都有内容
     assert!(!spec.spec.contract.input.schema.is_empty());
     assert!(!spec.spec.contract.output.schema.is_empty());
-    assert_eq!(spec.spec.blueprint.name, "xmucpp");
     assert_eq!(spec.spec.blueprint.steps.len(), 3);
 }
 
@@ -112,9 +111,8 @@ fn specification_unknown_fields_tolerated() {
 
 #[test]
 fn blueprint_optional_fields_tolerated() {
-    // 最小 Blueprint：只有 name，steps 默认空
-    let yaml = "name: minimal\n";
+    // 最小 Blueprint：空对象，steps 默认空
+    let yaml = "{}";
     let bp: Blueprint = serde_yaml::from_str(yaml).expect("最小 Blueprint 应可解析");
-    assert_eq!(bp.name, "minimal");
     assert!(bp.steps.is_empty());
 }

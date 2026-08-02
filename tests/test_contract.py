@@ -43,7 +43,6 @@ def test_specification_contract():
 def test_specification_blueprint_steps():
     """blueprint：steps 顺序 + 数据流链 + depends（与 Rust 契约测试对齐）。"""
     bp = load_fixture("specification.yaml")["spec"]["blueprint"]
-    assert bp["name"] == "xmucpp"
     steps = bp["steps"]
     assert [s["name"] for s in steps] == ["categorize", "collect_list", "collect_detail"]
     assert steps[0]["to"] == "categorized"

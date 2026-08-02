@@ -13,8 +13,6 @@ spec:
       rules:
         - 数据完整性校验
   blueprint:
-    name: xmucpp
-    description: 电商价格数据库（契约测试 fixture）
     steps:
       - name: categorize
         from: raw_records
