@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## [0.2.0] - 2026-08-02
+
+### Changed（破坏性）
+
+- **Specification envelope 重构**：去除 apiVersion/kind 与 schema_version 头，最终为 `metadata`（name/version/description）+ `spec`（内容）；`SpecificationContent` = contract + blueprint（pipeline 由 blueprint 投影，不存文档）。
+- **Blueprint 收敛**：剥离 contract/pipeline/status/timeline/cloud/deliverables，仅留 `steps`；名称/描述移入 Specification.metadata（单一事实源）。
+- **Pipeline 移入实现层**：`implementation::pipeline`（状态机 start_at/states），`Pipeline::from_blueprint` 投影；`Step` 归规格层 `specification::blueprint`。
+- **ContractPair** 移入 contract 域；旧 `BlueprintSteps` 删除。
+- **错误分层**：`ValidationError` 移入 validate.rs（域内聚），`BlueprintError` 统一接口保留 error.rs。
+- **validate_specification**：Specification 级校验（metadata.name + contract schema + blueprint steps/依赖）。
+
+### Compatibility
+
+- 旧 blueprint YAML（含 contract/pipeline/status 字段）读取：serde 忽略未知字段，`steps` 若存在仍可解析。
+
 ## [0.1.1] - 2026-08-02
 
 ### Added

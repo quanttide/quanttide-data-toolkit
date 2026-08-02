@@ -34,6 +34,14 @@ fn specification_parses() {
 }
 
 #[test]
+fn specification_passes_semantic_validation() {
+    // Specification 级校验：metadata + contract + blueprint 三级全过
+    let yaml = specification_fixture();
+    let spec: Specification = serde_yaml::from_str(&yaml).unwrap();
+    quanttide_data::validate_specification(&spec).expect("契约 fixture 应通过 Specification 校验");
+}
+
+#[test]
 fn specification_roundtrip() {
     let yaml = specification_fixture();
     let spec: Specification = serde_yaml::from_str(&yaml).unwrap();
