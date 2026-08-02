@@ -1,5 +1,5 @@
 use crate::error::ValidationError;
-use crate::types::specification::blueprint::Blueprint;
+use crate::specification::blueprint::Blueprint;
 
 /// Validate a Blueprint for semantic correctness.
 pub fn validate(blueprint: &Blueprint) -> Result<(), Vec<ValidationError>> {
@@ -43,10 +43,10 @@ pub fn validate(blueprint: &Blueprint) -> Result<(), Vec<ValidationError>> {
 
     // Status transitions
     match blueprint.status {
-        crate::types::execution::status::Status::Draft
-        | crate::types::execution::status::Status::Submitted
-        | crate::types::execution::status::Status::Confirmed
-        | crate::types::execution::status::Status::Rejected => {}
+        crate::execution::status::Status::Draft
+        | crate::execution::status::Status::Submitted
+        | crate::execution::status::Status::Confirmed
+        | crate::execution::status::Status::Rejected => {}
     }
 
     // Contract input/output must have non-empty schema
@@ -73,10 +73,10 @@ pub fn validate(blueprint: &Blueprint) -> Result<(), Vec<ValidationError>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::execution::status::Status;
-    use crate::types::specification::blueprint::{Blueprint, ContractPair};
-    use crate::types::specification::contract::Contract;
-    use crate::types::specification::pipeline::{Pipeline, Step};
+    use crate::execution::status::Status;
+    use crate::specification::blueprint::{Blueprint, ContractPair};
+    use crate::specification::contract::Contract;
+    use crate::specification::pipeline::{Pipeline, Step};
 
     fn make_blueprint() -> Blueprint {
         Blueprint {

@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-use crate::types::delivery::cloud::CloudPlan;
-use crate::types::delivery::deliverable::Deliverables;
-use crate::types::execution::status::{Status, TimelineEntry};
-use crate::types::requirement::datasource::DataSources;
-use crate::types::specification::contract::{Contract, PanelSpec};
-use crate::types::specification::pipeline::Pipeline;
+use crate::delivery::cloud::CloudPlan;
+use crate::delivery::deliverable::Deliverables;
+use crate::execution::status::{Status, TimelineEntry};
+use crate::requirement::datasource::DataSources;
+use crate::specification::contract::{Contract, PanelSpec};
+use crate::specification::pipeline::Pipeline;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Metadata {
@@ -67,13 +67,13 @@ pub struct OriginalRequirementsRecord {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::delivery::cloud::{ChunkedUpload, CloudPlan, CloudServer};
-    use crate::types::specification::contract::Contract;
+    use crate::delivery::cloud::{ChunkedUpload, CloudPlan, CloudServer};
+    use crate::specification::contract::Contract;
 
-    use crate::types::delivery::deliverable::Deliverable;
-    use crate::types::delivery::deliverable::Deliverables;
-    use crate::types::execution::status::Status;
-    use crate::types::specification::pipeline::{Pipeline, Step};
+    use crate::delivery::deliverable::Deliverable;
+    use crate::delivery::deliverable::Deliverables;
+    use crate::execution::status::Status;
+    use crate::specification::pipeline::{Pipeline, Step};
 
     fn make_test_blueprint() -> Blueprint {
         Blueprint {
