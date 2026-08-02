@@ -34,6 +34,12 @@ def test_blueprint_fixture_structure():
     assert bp["contract"]["input"]["schema"]
     assert bp["contract"]["output"]["schema"]
     assert bp["status"] == "draft"
+    # 与 Rust 契约测试对齐的字段断言
+    assert bp["description"] == "电商价格数据库（契约测试 fixture）"
+    assert bp["contract"]["input"]["format"] == "CSV"
+    assert "数据完整性校验" in bp["contract"]["output"]["rules"]
+    assert steps[1]["depends"] == ["categorize"]
+    assert steps[2]["depends"] == ["collect_list"]
 
 
 def test_blueprint_fixture_roundtrip():

@@ -51,6 +51,62 @@ fn contract_fixture_passes_semantic_validation() {
 }
 
 #[test]
+fn contract_metadata_and_contract_fields() {
+    // description / format / rules / depends 字段值
+    let yaml = contract_fixture();
+    let bp: Blueprint = serde_yaml::from_str(&yaml).unwrap();
+    assert_eq!(
+        bp.description.as_deref(),
+        Some("电商价格数据库（契约测试 fixture）")
+    );
+    assert_eq!(bp.contract.input.format.as_deref(), Some("CSV"));
+    assert_eq!(bp.contract.output.format.as_deref(), Some("CSV"));
+    assert!(bp
+        .contract
+        .output
+        .rules
+        .as_deref()
+        .unwrap_or_default()
+        .contains(&"数据完整性校验".to_string()));
+    // depends 依赖链
+    assert_eq!(
+        bp.pipeline.steps[1].depends.as_deref(),
+        Some(&["categorize".to_string()][..])
+    );
+    assert_eq!(
+        bp.pipeline.steps[2].depends.as_deref(),
+        Some(&["collect_list".to_string()][..])
+    );
+}
+
+#[test]
+fn contract_optional_fields_tolerated() {
+    // 可选字段（cloud/deliverables/timeline）缺失时反序列化成功
+    let yaml = contract_fixture();
+    let bp: Blueprint = serde_yaml::from_str(&yaml).unwrap();
+    assert!(bp.cloud.is_none());
+    assert!(bp.deliverables.is_none());
+    assert!(bp.timeline.is_none());
+}
+
+#[test]
+fn contract_unknown_fields_tolerated() {
+    // 契约演进：模型外新增字段（旧 consumer 不炸，serde 忽略未知）
+    let yaml = r#"
+name: evolve
+pipeline:
+  name: p
+  steps: []
+status: draft
+created_at: "2026-08-02T00:00:00Z"
+updated_at: "2026-08-02T00:00:00Z"
+future_field: { nested: true }
+"#;
+    let bp: Blueprint = serde_yaml::from_str(yaml).expect("未知字段应被忽略");
+    assert_eq!(bp.name, "evolve");
+}
+
+#[test]
 fn contract_status_and_timestamps() {
     let yaml = contract_fixture();
     let bp: Blueprint = serde_yaml::from_str(&yaml).unwrap();
