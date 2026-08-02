@@ -51,7 +51,7 @@ pub fn validate(blueprint: &Blueprint) -> Result<(), Vec<ValidationError>> {
 mod tests {
     use super::*;
     use crate::specification::blueprint::Blueprint;
-    use crate::specification::pipeline::Step;
+    use crate::specification::blueprint::Step;
 
     fn make_blueprint() -> Blueprint {
         Blueprint {

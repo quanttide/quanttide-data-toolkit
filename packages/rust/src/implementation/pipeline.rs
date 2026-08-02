@@ -1,21 +1,10 @@
+//! 实现层（对齐 CLI `implementation/`）：可执行管道（状态机），由 Blueprint.steps 投影生成。
+
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
-// ── 工作流步骤（蓝图的流程定义：数据流语义）──
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Step {
-    pub name: String,
-    pub from: String,
-    pub to: String,
-    pub desc: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub depends: Option<Vec<String>>,
-}
-
-// ── 状态机模型（v0.1.1 引入）──
-// 可执行管道：控制流语义（start_at + states），由 Blueprint.steps 投影生成。
+use crate::specification::blueprint::Step;
 
 /// 状态类型
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

@@ -6,7 +6,6 @@
 
 pub mod blueprint;
 pub mod contract;
-pub mod pipeline;
 
 use serde::{Deserialize, Serialize};
 
@@ -62,8 +61,8 @@ impl Specification {
 mod tests {
     use super::*;
     use crate::specification::blueprint::Blueprint;
+    use crate::specification::blueprint::Step;
     use crate::specification::contract::ContractPair;
-    use crate::specification::pipeline::Step;
 
     fn sample_blueprint() -> Blueprint {
         Blueprint {

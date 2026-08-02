@@ -1,6 +1,15 @@
 use serde::{Deserialize, Serialize};
 
-use crate::specification::pipeline::Step;
+/// 工作流步骤（蓝图的流程定义：数据流语义）。
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Step {
+    pub name: String,
+    pub from: String,
+    pub to: String,
+    pub desc: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub depends: Option<Vec<String>>,
+}
 
 /// 处理蓝图：工作流步骤（数据流语义），pipeline 由 steps 投影生成（不存于此）。
 /// 名称/描述在 Specification.metadata（单一事实源，此处不重复）。
