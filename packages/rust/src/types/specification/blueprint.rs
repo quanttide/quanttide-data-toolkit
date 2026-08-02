@@ -4,8 +4,8 @@ use crate::types::delivery::cloud::CloudPlan;
 use crate::types::delivery::deliverable::Deliverables;
 use crate::types::execution::status::{Status, TimelineEntry};
 use crate::types::requirement::datasource::DataSources;
-use crate::types::spec::contract::{Contract, PanelSpec};
-use crate::types::spec::pipeline::Pipeline;
+use crate::types::specification::contract::{Contract, PanelSpec};
+use crate::types::specification::pipeline::Pipeline;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Metadata {

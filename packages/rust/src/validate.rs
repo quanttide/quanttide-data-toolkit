@@ -1,5 +1,5 @@
 use crate::error::ValidationError;
-use crate::types::spec::blueprint::Blueprint;
+use crate::types::specification::blueprint::Blueprint;
 
 /// Validate a Blueprint for semantic correctness.
 pub fn validate(blueprint: &Blueprint) -> Result<(), Vec<ValidationError>> {
