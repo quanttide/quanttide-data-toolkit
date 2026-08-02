@@ -41,6 +41,7 @@ pub struct Specification {
 }
 
 impl Specification {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         title: impl Into<String>,
         version: impl Into<String>,
