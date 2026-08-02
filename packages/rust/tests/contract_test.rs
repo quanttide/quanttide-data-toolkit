@@ -6,8 +6,8 @@
 use quanttide_data::Blueprint;
 
 fn contract_fixture() -> String {
-    std::fs::read_to_string("../../tests/contract/blueprint.v1.yaml")
-        .expect("契约 fixture 缺失：../../tests/contract/blueprint.v1.yaml")
+    std::fs::read_to_string("../../tests/contract/blueprint.yaml")
+        .expect("契约 fixture 缺失：../../tests/contract/blueprint.yaml")
 }
 
 #[test]

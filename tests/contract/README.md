@@ -6,7 +6,7 @@
 
 | 文件 | 结构 | 用途 |
 |------|------|------|
-| `blueprint.v1.yaml` | Blueprint v1（当前模型，含 contract/pipeline/steps/status） | Rust 已落地契约测试 |
+| `blueprint.yaml` | Blueprint v1（当前模型，含 contract/pipeline/steps/status） | Rust 已落地契约测试 |
 | （阶段 1/2 后）`specification.v1.yaml` | Specification 三分（contract/blueprint/pipeline 平级） | 模型重构后的契约 |
 
 ## 各语言实现状态
