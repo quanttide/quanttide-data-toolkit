@@ -48,7 +48,10 @@ mod tests {
 
     #[test]
     fn test_validation_error_display() {
-        let e = ValidationError { field: "name".into(), message: "must not be empty".into() };
+        let e = ValidationError {
+            field: "name".into(),
+            message: "must not be empty".into(),
+        };
         assert_eq!(e.to_string(), "name: must not be empty");
     }
 
@@ -62,8 +65,14 @@ mod tests {
     #[test]
     fn test_validation_errors_display_multiple() {
         let errors = vec![
-            ValidationError { field: "a".into(), message: "err1".into() },
-            ValidationError { field: "b".into(), message: "err2".into() },
+            ValidationError {
+                field: "a".into(),
+                message: "err1".into(),
+            },
+            ValidationError {
+                field: "b".into(),
+                message: "err2".into(),
+            },
         ];
         let e = BlueprintError::Validation(errors);
         let s = e.to_string();
@@ -98,4 +107,3 @@ mod tests {
         let _: &dyn std::error::Error = &e;
     }
 }
-
