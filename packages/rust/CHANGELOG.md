@@ -13,7 +13,7 @@
 
 ### Compatibility
 
-- 旧 blueprint YAML（含 contract/pipeline/status 字段）读取：serde 忽略未知字段，`steps` 若存在仍可解析。
+- 旧 blueprint YAML（含 contract/pipeline/status 字段）反序列化**不炸**（serde 忽略未知字段）；旧结构 `steps`（在 `pipeline.steps` 嵌套）的迁移属消费方（CLI v0.3.0 迁移逻辑）职责。
 
 ## [0.1.1] - 2026-08-02
 

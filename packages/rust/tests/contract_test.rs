@@ -42,6 +42,56 @@ fn specification_passes_semantic_validation() {
 }
 
 #[test]
+fn pipeline_projected_from_blueprint_steps() {
+    // pipeline 由 blueprint.steps 投影（不存文档）：投影结果契约守护
+    let yaml = specification_fixture();
+    let spec: Specification = serde_yaml::from_str(&yaml).unwrap();
+    let pipeline = quanttide_data::Pipeline::from_blueprint(&spec.spec.blueprint.steps);
+    assert_eq!(pipeline.start_at, "categorize");
+    assert_eq!(pipeline.states.len(), 3);
+    // 顺序 next 串联（此前 wrap 静默丢的字段，投影契约守护）
+    assert_eq!(
+        pipeline.states["categorize"].next.as_deref(),
+        Some("collect_list")
+    );
+    assert_eq!(pipeline.states["collect_detail"].next, None);
+    // 投影一致性：states 与 steps 一一对应
+    for step in &spec.spec.blueprint.steps {
+        assert!(
+            pipeline.states.contains_key(&step.name),
+            "state 缺失: {}",
+            step.name
+        );
+    }
+}
+
+#[test]
+fn legacy_blueprint_yaml_compatible() {
+    // v0.2.0 兼容声明：旧 blueprint YAML（含 contract/pipeline/status 字段）反序列化不炸
+    // （serde 忽略未知字段）；旧结构数据的 steps 迁移（pipeline.steps → 顶层）属消费方（CLI）职责。
+    let yaml = r#"
+name: legacy
+description: 旧结构蓝图
+contract:
+  input: { schema: "in", format: CSV }
+  output: { schema: "out", format: CSV }
+pipeline:
+  name: p
+  steps:
+    - name: s1
+      from: a
+      to: b
+      desc: first
+status: draft
+created_at: "2026-08-02T00:00:00Z"
+updated_at: "2026-08-02T00:00:00Z"
+"#;
+    let bp: Blueprint = serde_yaml::from_str(yaml).expect("旧 blueprint YAML 应可解析（不炸）");
+    // 未知字段被忽略；顶层 steps 缺失（旧结构在 pipeline.steps）——不炸即为兼容底线
+    assert!(bp.steps.is_empty());
+}
+
+#[test]
 fn specification_roundtrip() {
     let yaml = specification_fixture();
     let spec: Specification = serde_yaml::from_str(&yaml).unwrap();
