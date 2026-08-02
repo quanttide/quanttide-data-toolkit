@@ -6,7 +6,7 @@
 import yaml
 from pathlib import Path
 
-CONTRACT_DIR = Path(__file__).parent
+CONTRACT_DIR = Path(__file__).parent / "contract"
 
 
 def load_fixture(name: str) -> dict:
