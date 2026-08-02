@@ -2,7 +2,6 @@ use std::fmt;
 
 #[derive(Debug)]
 pub enum BlueprintError {
-    CueParse(String),
     Validation(Vec<ValidationError>),
     Io(std::io::Error),
     Serde(String),
@@ -23,7 +22,6 @@ impl fmt::Display for ValidationError {
 impl fmt::Display for BlueprintError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            BlueprintError::CueParse(msg) => write!(f, "CUE parse error: {msg}"),
             BlueprintError::Validation(errors) => {
                 let msgs: Vec<String> = errors.iter().map(|e| e.to_string()).collect();
                 write!(f, "Validation errors: {}", msgs.join("; "))
@@ -53,13 +51,6 @@ mod tests {
             message: "must not be empty".into(),
         };
         assert_eq!(e.to_string(), "name: must not be empty");
-    }
-
-    #[test]
-    fn test_cue_parse_error_display() {
-        let e = BlueprintError::CueParse("unexpected token".into());
-        assert!(e.to_string().contains("CUE parse error"));
-        assert!(e.to_string().contains("unexpected token"));
     }
 
     #[test]
@@ -103,7 +94,7 @@ mod tests {
 
     #[test]
     fn test_blueprint_error_is_std_error() {
-        let e = BlueprintError::CueParse("test".into());
+        let e = BlueprintError::Serde("test".into());
         let _: &dyn std::error::Error = &e;
     }
 }
