@@ -2,8 +2,7 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
-// ── 旧列表模型（v0.1 兼容，随 v0.2.0 移除）──
-// 工作流步骤列表：蓝图的流程定义（数据流语义，steps + depends）。
+// ── 工作流步骤（蓝图的流程定义：数据流语义）──
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Step {
@@ -15,28 +14,8 @@ pub struct Step {
     pub depends: Option<Vec<String>>,
 }
 
-/// 工作流步骤列表（旧 Pipeline 更名，v0.2.0 移除；新 Pipeline 为状态机）。
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct BlueprintSteps {
-    pub name: String,
-    pub steps: Vec<Step>,
-}
-
-impl BlueprintSteps {
-    pub fn new(name: impl Into<String>) -> Self {
-        BlueprintSteps {
-            name: name.into(),
-            steps: Vec::new(),
-        }
-    }
-
-    pub fn add_step(&mut self, step: Step) {
-        self.steps.push(step);
-    }
-}
-
-// ── 新状态机模型（v0.1.1 引入，阶段 1）──
-// 可执行管道：控制流语义（start_at + states），由 BlueprintSteps 投影生成。
+// ── 状态机模型（v0.1.1 引入）──
+// 可执行管道：控制流语义（start_at + states），由 Blueprint.steps 投影生成。
 
 /// 状态类型
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -72,12 +51,12 @@ pub struct Pipeline {
 impl Pipeline {
     /// 从蓝图工作流步骤投影为可执行状态机：
     /// 顺序步骤 next 串联；depends 表达的分支在投影时补 condition（先到步骤为条件分支）。
-    pub fn from_blueprint(steps: &BlueprintSteps) -> Self {
+    pub fn from_blueprint(steps: &[Step]) -> Self {
         let mut states = BTreeMap::new();
-        let names: Vec<&str> = steps.steps.iter().map(|s| s.name.as_str()).collect();
+        let names: Vec<&str> = steps.iter().map(|s| s.name.as_str()).collect();
 
-        for (i, step) in steps.steps.iter().enumerate() {
-            let is_last = i == steps.steps.len() - 1;
+        for (i, step) in steps.iter().enumerate() {
+            let is_last = i == steps.len() - 1;
             let next = if is_last {
                 None
             } else {
@@ -98,7 +77,7 @@ impl Pipeline {
         }
 
         // depends 分支：若步骤有依赖且非紧邻前序，标注 condition（投影简化，v0.2.0 细化）
-        for step in &steps.steps {
+        for step in steps {
             if let Some(deps) = &step.depends {
                 if !deps.is_empty() {
                     if let Some(state) = states.get_mut(&step.name) {
@@ -150,46 +129,32 @@ mod tests {
         assert_eq!(back.depends, None);
     }
 
-    #[test]
-    fn test_blueprint_steps() {
-        let mut steps = BlueprintSteps::new("test-pipeline");
-        steps.add_step(Step {
-            name: "s1".into(),
-            from: "a".into(),
-            to: "b".into(),
-            desc: "do something".into(),
-            depends: None,
-        });
-        assert_eq!(steps.steps.len(), 1);
-        assert_eq!(steps.name, "test-pipeline");
-    }
-
     // ── 状态机测试（v0.1.1 新增）──
 
-    fn sample_steps() -> BlueprintSteps {
-        let mut steps = BlueprintSteps::new("xmucpp-pipeline");
-        steps.add_step(Step {
-            name: "categorize".into(),
-            from: "raw_records".into(),
-            to: "categorized".into(),
-            desc: "商品类别分配器".into(),
-            depends: None,
-        });
-        steps.add_step(Step {
-            name: "collect_list".into(),
-            from: "categorized".into(),
-            to: "product_list".into(),
-            desc: "商品列表采集器".into(),
-            depends: Some(vec!["categorize".into()]),
-        });
-        steps.add_step(Step {
-            name: "collect_detail".into(),
-            from: "product_list".into(),
-            to: "product_records".into(),
-            desc: "商品详情采集器".into(),
-            depends: Some(vec!["collect_list".into()]),
-        });
-        steps
+    fn sample_steps() -> Vec<Step> {
+        vec![
+            Step {
+                name: "categorize".into(),
+                from: "raw_records".into(),
+                to: "categorized".into(),
+                desc: "商品类别分配器".into(),
+                depends: None,
+            },
+            Step {
+                name: "collect_list".into(),
+                from: "categorized".into(),
+                to: "product_list".into(),
+                desc: "商品列表采集器".into(),
+                depends: Some(vec!["categorize".into()]),
+            },
+            Step {
+                name: "collect_detail".into(),
+                from: "product_list".into(),
+                to: "product_records".into(),
+                desc: "商品详情采集器".into(),
+                depends: Some(vec!["collect_list".into()]),
+            },
+        ]
     }
 
     #[test]
@@ -225,7 +190,7 @@ mod tests {
 
     #[test]
     fn test_state_machine_empty_steps() {
-        let pipeline = Pipeline::from_blueprint(&BlueprintSteps::new("empty"));
+        let pipeline = Pipeline::from_blueprint(&[]);
         assert_eq!(pipeline.start_at, "");
         assert!(pipeline.states.is_empty());
     }

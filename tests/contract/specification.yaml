@@ -1,10 +1,8 @@
-openapi: 3.1.0
-info:
-  title: xmucpp
+schema_version: 3.1.0
+metadata:
+  name: xmucpp
   version: "1.0.0"
-  description: 电商价格数据库（契约测试 fixture）
-  x-generated-by: qtcloud-data-cli
-  x-source-path: examples/xmucpp/blueprint.yaml
+  description: 电商价格数据库
 spec:
   contract:
     input:
@@ -18,54 +16,18 @@ spec:
   blueprint:
     name: xmucpp
     description: 电商价格数据库（契约测试 fixture）
-    contract:
-      input:
-        schema: ""
-        format: ""
-      output:
-        schema: ""
-        format: ""
-    pipeline:
-      name: xmucpp-pipeline
-      steps:
-        - name: categorize
-          from: raw_records
-          to: categorized
-          desc: 商品类别分配器
-        - name: collect_list
-          from: categorized
-          to: product_list
-          desc: 商品列表采集器
-          depends: [categorize]
-        - name: collect_detail
-          from: product_list
-          to: product_records
-          desc: 商品详情采集器
-          depends: [collect_list]
-    status: draft
-    created_at: "2026-08-02T00:00:00Z"
-    updated_at: "2026-08-02T00:00:00Z"
-  pipeline:
-    start_at: categorize
-    states:
-      categorize:
-        state_type: task
+    steps:
+      - name: categorize
         from: raw_records
         to: categorized
         desc: 商品类别分配器
-        resource: builtin:copy
-        next: collect_list
-      collect_list:
-        state_type: task
+      - name: collect_list
         from: categorized
         to: product_list
         desc: 商品列表采集器
-        resource: builtin:copy
-        next: collect_detail
-        condition: "depends: categorize"
-      collect_detail:
-        state_type: task
+        depends: [categorize]
+      - name: collect_detail
         from: product_list
         to: product_records
         desc: 商品详情采集器
-        resource: builtin:copy
+        depends: [collect_list]

@@ -1,127 +1,32 @@
 use serde::{Deserialize, Serialize};
 
-use crate::delivery::cloud::CloudPlan;
-use crate::delivery::deliverable::Deliverables;
-use crate::execution::status::{Status, TimelineEntry};
-use crate::requirement::datasource::DataSources;
-use crate::specification::contract::{ContractPair, PanelSpec};
-use crate::specification::pipeline::BlueprintSteps;
+use crate::specification::pipeline::Step;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Metadata {
-    pub responsible: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub reviewer: Option<String>,
-    pub repo: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct OriginalRequirements {
-    pub background: String,
-    pub sources: DataSources,
-    pub output: PanelSpec,
-}
-
+/// 处理蓝图：工作流步骤（数据流语义），pipeline 由 steps 投影生成（不存于此）。
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Blueprint {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     #[serde(default)]
-    pub contract: ContractPair,
-    pub pipeline: BlueprintSteps,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub cloud: Option<CloudPlan>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub deliverables: Option<Deliverables>,
-    pub status: Status,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub timeline: Option<Vec<TimelineEntry>>,
-    pub created_at: String,
-    pub updated_at: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct MetadataRecord {
-    pub responsible: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub reviewer: Option<String>,
-    pub repo: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct OriginalRequirementsRecord {
-    pub background: String,
-    pub sources: DataSources,
-    pub output: PanelSpec,
+    pub steps: Vec<Step>,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::delivery::cloud::{ChunkedUpload, CloudPlan, CloudServer};
-    use crate::specification::contract::Contract;
-
-    use crate::delivery::deliverable::Deliverable;
-    use crate::delivery::deliverable::Deliverables;
-    use crate::execution::status::Status;
-    use crate::specification::pipeline::{BlueprintSteps, Step};
 
     fn make_test_blueprint() -> Blueprint {
         Blueprint {
             name: "test-blueprint".into(),
             description: Some("测试用 Blueprint".into()),
-            contract: ContractPair {
-                input: Contract {
-                    schema: "input schema".into(),
-                    format: Some("json".into()),
-                    rules: None,
-                },
-                output: Contract {
-                    schema: "output schema".into(),
-                    format: Some("json".into()),
-                    rules: Some(vec!["规则1".into()]),
-                },
-            },
-            pipeline: BlueprintSteps {
-                name: "test-pipeline".into(),
-                steps: vec![Step {
-                    name: "step1".into(),
-                    from: "src".into(),
-                    to: "dst".into(),
-                    desc: "do it".into(),
-                    depends: None,
-                }],
-            },
-            cloud: Some(CloudPlan {
-                server: CloudServer {
-                    instance_type: "{{instance_type}}".into(),
-                    vcpu: 4,
-                    memory_gb: 16,
-                    data_disk_gb: 300,
-                    region: "{{region}}".into(),
-                    provider: "{{provider}}".into(),
-                },
-                advantages: vec![],
-                upload: ChunkedUpload {
-                    chunk_size_gb: 5,
-                    method: "chunked".into(),
-                },
-            }),
-            deliverables: Some(Deliverables {
-                data: Deliverable {
-                    description: "data".into(),
-                    supplement: None,
-                },
-                doc: Deliverable {
-                    description: "doc".into(),
-                    supplement: None,
-                },
-            }),
-            status: Status::Draft,
-            timeline: None,
-            created_at: "2026-01-01T00:00:00+00:00".into(),
-            updated_at: "2026-07-17T00:00:00+00:00".into(),
+            steps: vec![Step {
+                name: "step1".into(),
+                from: "src".into(),
+                to: "dst".into(),
+                desc: "do it".into(),
+                depends: None,
+            }],
         }
     }
 
@@ -131,26 +36,46 @@ mod tests {
         let json = serde_json::to_string_pretty(&bp).unwrap();
         let back: Blueprint = serde_json::from_str(&json).unwrap();
         assert_eq!(back.name, bp.name);
-        assert_eq!(back.pipeline.steps.len(), 1);
-        assert_eq!(back.status, Status::Draft);
+        assert_eq!(back.steps.len(), 1);
     }
 
     #[test]
     fn test_minimal_blueprint() {
-        let json = r#"{
-            "name": "minimal",
-            "contract": {
-                "input": {"schema": "in"},
-                "output": {"schema": "out", "rules": []}
-            },
-            "pipeline": {"name": "p", "steps": []},
-            "status": "draft",
-            "created_at": "2026-01-01T00:00:00+00:00",
-            "updated_at": "2026-01-01T00:00:00+00:00"
-        }"#;
+        // 最小 Blueprint：只有 name，steps 默认空
+        let json = r#"{"name": "minimal"}"#;
         let bp: Blueprint = serde_json::from_str(json).unwrap();
         assert_eq!(bp.name, "minimal");
-        assert_eq!(bp.cloud, None);
-        assert_eq!(bp.deliverables, None);
+        assert!(bp.steps.is_empty());
+        assert_eq!(bp.description, None);
+    }
+
+    #[test]
+    fn test_steps_roundtrip_with_depends() {
+        let bp = Blueprint {
+            name: "chain".into(),
+            description: None,
+            steps: vec![
+                Step {
+                    name: "a".into(),
+                    from: "x".into(),
+                    to: "y".into(),
+                    desc: "first".into(),
+                    depends: None,
+                },
+                Step {
+                    name: "b".into(),
+                    from: "y".into(),
+                    to: "z".into(),
+                    desc: "second".into(),
+                    depends: Some(vec!["a".into()]),
+                },
+            ],
+        };
+        let yaml = serde_yaml::to_string(&bp).unwrap();
+        let back: Blueprint = serde_yaml::from_str(&yaml).unwrap();
+        assert_eq!(
+            back.steps[1].depends.as_deref(),
+            Some(&["a".to_string()][..])
+        );
     }
 }
