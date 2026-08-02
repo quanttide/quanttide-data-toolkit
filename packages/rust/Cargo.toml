@@ -1,6 +1,6 @@
 [package]
 name = "quanttide-data"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["QuantTide Inc. <opensource@quanttide.com>"]
 description = "量潮数据工程核心库 — Blueprint 数据模型与 CUE 解析"

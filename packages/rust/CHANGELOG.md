@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [0.1.1] - 2026-08-02
+
+### Added
+- `Specification` envelope（K8s 风格：api_version/kind/metadata/spec），`spec` 为 `SpecificationContent`（contract + blueprint + pipeline **三分平级**）。
+- `Pipeline` 重构为**状态机**（`start_at` + `states` + `condition` 分支，task/choice/parallel），旧列表模型更名 `BlueprintSteps`（v0.2.0 移除）。
+- `Pipeline::from_blueprint`：蓝图工作流步骤 → 可执行状态机投影（顺序 next 串联，depends 补 condition）。
+- `ContractPair` 从 blueprint 模块移入 contract 模块（契约域归属）。
+
+### Changed
+- `Blueprint.pipeline` 字段类型改为 `BlueprintSteps`（字段名与 `steps` 访问不变，兼容）。
+- 旧 `Pipeline`（列表）更名 `BlueprintSteps`，`Step` 保留原名。
+
 ## [Unreleased]
 
 ### Changed

@@ -4,8 +4,8 @@ use crate::delivery::cloud::CloudPlan;
 use crate::delivery::deliverable::Deliverables;
 use crate::execution::status::{Status, TimelineEntry};
 use crate::requirement::datasource::DataSources;
-use crate::specification::contract::{Contract, PanelSpec};
-use crate::specification::pipeline::Pipeline;
+use crate::specification::contract::{ContractPair, PanelSpec};
+use crate::specification::pipeline::BlueprintSteps;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Metadata {
@@ -29,7 +29,7 @@ pub struct Blueprint {
     pub description: Option<String>,
     #[serde(default)]
     pub contract: ContractPair,
-    pub pipeline: Pipeline,
+    pub pipeline: BlueprintSteps,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cloud: Option<CloudPlan>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -39,14 +39,6 @@ pub struct Blueprint {
     pub timeline: Option<Vec<TimelineEntry>>,
     pub created_at: String,
     pub updated_at: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
-pub struct ContractPair {
-    #[serde(default)]
-    pub input: Contract,
-    #[serde(default)]
-    pub output: Contract,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -73,7 +65,7 @@ mod tests {
     use crate::delivery::deliverable::Deliverable;
     use crate::delivery::deliverable::Deliverables;
     use crate::execution::status::Status;
-    use crate::specification::pipeline::{Pipeline, Step};
+    use crate::specification::pipeline::{BlueprintSteps, Step};
 
     fn make_test_blueprint() -> Blueprint {
         Blueprint {
@@ -91,7 +83,7 @@ mod tests {
                     rules: Some(vec!["规则1".into()]),
                 },
             },
-            pipeline: Pipeline {
+            pipeline: BlueprintSteps {
                 name: "test-pipeline".into(),
                 steps: vec![Step {
                     name: "step1".into(),

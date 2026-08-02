@@ -86,9 +86,10 @@ pub fn validate(blueprint: &Blueprint) -> Result<(), Vec<ValidationError>> {
 mod tests {
     use super::*;
     use crate::execution::status::Status;
-    use crate::specification::blueprint::{Blueprint, ContractPair};
+    use crate::specification::blueprint::Blueprint;
     use crate::specification::contract::Contract;
-    use crate::specification::pipeline::{Pipeline, Step};
+    use crate::specification::contract::ContractPair;
+    use crate::specification::pipeline::{BlueprintSteps, Step};
 
     fn make_blueprint() -> Blueprint {
         Blueprint {
@@ -106,7 +107,7 @@ mod tests {
                     rules: None,
                 },
             },
-            pipeline: Pipeline {
+            pipeline: BlueprintSteps {
                 name: "test-pipe".into(),
                 steps: vec![
                     Step {

@@ -12,6 +12,7 @@ pub use execution::status::{Status, TimelineAction, TimelineEntry};
 pub use requirement::datasource::{DataSources, SourceTable, UserFilter};
 pub use specification::blueprint::Blueprint;
 pub use specification::contract::{ColumnDef, Contract, PanelSpec};
-pub use specification::pipeline::{Pipeline, Step};
+pub use specification::pipeline::{BlueprintSteps, Pipeline, PipelineState, StateType, Step};
+pub use specification::{Specification, SpecificationContent, SpecificationMetadata};
 pub use validate::validate;
 pub use validate::ValidationError;
