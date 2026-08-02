@@ -2,21 +2,9 @@ use std::fmt;
 
 #[derive(Debug)]
 pub enum BlueprintError {
-    Validation(Vec<ValidationError>),
+    Validation(Vec<crate::validate::ValidationError>),
     Io(std::io::Error),
     Serde(String),
-}
-
-#[derive(Debug)]
-pub struct ValidationError {
-    pub field: String,
-    pub message: String,
-}
-
-impl fmt::Display for ValidationError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}: {}", self.field, self.message)
-    }
 }
 
 impl fmt::Display for BlueprintError {
@@ -43,6 +31,7 @@ impl From<std::io::Error> for BlueprintError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::validate::ValidationError;
 
     #[test]
     fn test_validation_error_display() {

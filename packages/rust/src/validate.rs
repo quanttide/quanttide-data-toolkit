@@ -1,4 +1,16 @@
-use crate::error::ValidationError;
+/// 语义校验错误（validate 域错误，域内聚定义）。
+#[derive(Debug)]
+pub struct ValidationError {
+    pub field: String,
+    pub message: String,
+}
+
+impl std::fmt::Display for ValidationError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}: {}", self.field, self.message)
+    }
+}
+
 use crate::specification::blueprint::Blueprint;
 
 /// Validate a Blueprint for semantic correctness.
