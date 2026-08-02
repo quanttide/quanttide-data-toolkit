@@ -13,8 +13,8 @@ fn contract_fixture() -> String {
 #[test]
 fn contract_fixture_parses_as_blueprint() {
     let yaml = contract_fixture();
-    let bp: Blueprint = serde_yaml::from_str(&yaml)
-        .expect("契约 fixture 应能被当前 Blueprint 模型解析");
+    let bp: Blueprint =
+        serde_yaml::from_str(&yaml).expect("契约 fixture 应能被当前 Blueprint 模型解析");
     assert_eq!(bp.name, "xmucpp");
     assert_eq!(bp.pipeline.steps.len(), 3);
 }
