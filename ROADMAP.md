@@ -34,6 +34,13 @@
 - [ ] 废弃仅文档标注（**不标 `#[deprecated]` 属性**，避免下游 -D warnings 编译挂）
 - [ ] 旧 blueprint YAML（含 pipeline/status）读入不炸，发 v0.2.0
 
+### 契约测试（先行 Rust，跨语言扩展随阶段 4）
+
+- [x] `tests/contract/` 契约 fixture（`blueprint.v1.yaml`，跨语言共享事实源）
+- [x] Rust 侧契约测试：`packages/rust/tests/contract_test.rs`（解析 fixture 断言，4 tests）
+- [ ] Python/Flutter/Dart 同 fixture 契约测试（阶段 4）
+- [ ] 模型重构后新增 `specification.v1.yaml` 契约（三分结构，各语言同步）
+
 ### 阶段 3：CLI 跟随（每命令一提交）→ cli v0.3.0
 
 - [ ] `spec/mod.rs`：SpecificationBody 改三分（消费新模型）
