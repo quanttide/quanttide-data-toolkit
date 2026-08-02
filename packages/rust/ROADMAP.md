@@ -44,17 +44,20 @@ pub struct Pipeline {
 }
 ```
 
-### 任务
+### 阶段 1：纯加法（并行模型，零破坏）→ v0.1.1
 
-- [ ] 新增 `types/specification.rs`：Specification envelope（api_version/kind/metadata + contract/blueprint/pipeline）
-- [ ] `Blueprint` 收敛为 `steps`（剥离 contract → spec 平级、pipeline → spec 平级、status/timeline → 运行层、cloud/deliverables → 交付层）
-- [ ] `Pipeline` 重构为状态机：`start_at` + `states`（type/from/to/desc/resource/next|end/condition）
+- [ ] 新增 `specification/mod.rs` 的 `Specification`：envelope（api_version/kind/metadata）+ contract/blueprint/pipeline 三分
+- [ ] 新增 `PipelineState` 状态机：`start_at` + `states`（type/from/to/desc/resource/next|end/condition），与旧 `Pipeline`（列表）并存
 - [ ] 投影：`Pipeline::from_blueprint(&Blueprint)`（steps 数据流语义 → states 控制流语义）
-- [ ] 运行态剥离：`Status`/`Timeline` 移出 Blueprint（后续独立 `Execution` 类型）
-- [ ] CLI 领域模型下沉：`Specification`（envelope + wrap/validate）、`Volume`（catalog）、`Job`（jobs.json）
-- [ ] 兼容读取：旧 blueprint YAML（含 pipeline/status 字段）serde 兼容
-- [ ] 契约测试：跨语言（rust/python/flutter/dart）同一 Specification YAML 解析一致
-- [ ] 发布 v0.2.0（破坏性，CLI 依赖升级适配随 cli v0.3.0）
+- [ ] 旧 `Blueprint` 原样不动，36+ tests 全绿，发 v0.1.1（非破坏）
+
+### 阶段 2：切换（旧字段保留 + 读取兼容）→ v0.2.0
+
+- [ ] `Blueprint` 收敛：contract/pipeline/status/timeline/cloud/deliverables 保留但 `#[serde(default)]`（旧 YAML 可读）
+- [ ] 内部逻辑迁移到 `Specification` 三分结构（新结构为主）
+- [ ] 废弃仅文档标注（不标 `#[deprecated]` 属性，防下游 -D warnings 挂）
+- [ ] 旧 blueprint YAML 读入不炸；CLI 领域模型下沉（`Specification` envelope + wrap/validate、`Volume`、`Job`）随 cli v0.3.0
+- [ ] 发布 v0.2.0（破坏性标记，兼容读取）
 
 ## 序列化支持（保持）
 
