@@ -27,4 +27,5 @@
 ## 经验教训
 
 - **CI 对齐**：重构移动文件后，`cargo build` 绿不代表 `cargo test` 绿——**测试模块（`#[cfg(test)]`）内的路径引用也要同步**（域划分重构曾因漏改测试 use 导致 CI 挂）。验证一律 `RUSTFLAGS="-D warnings" cargo test --locked` + clippy + fmt
+- **发布原子性（必执行）**：bump `Cargo.toml` 版本时必须**同一步 `cargo generate-lockfile` 并一起提交**——CI `--locked` 要求 lock 与 manifest 一致，分两个提交会导致中间提交 CI 必挂（v0.1.1 二次踩坑，v0.2.2 首次）。发布流程固定为：`bump + generate-lockfile + test 全绿 → 单提交 → tag → push`
 - **目录即语义**：移动文件用 `git mv` 保留历史；模块路径变化时同步全部 `crate::...` 引用（含测试）
