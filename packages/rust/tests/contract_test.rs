@@ -43,6 +43,14 @@ fn contract_schema_roundtrip() {
 }
 
 #[test]
+fn contract_fixture_passes_semantic_validation() {
+    // 契约 fixture 必须是语义合法的 Blueprint（validate 全过）
+    let yaml = contract_fixture();
+    let bp: Blueprint = serde_yaml::from_str(&yaml).unwrap();
+    quanttide_data::validate(&bp).expect("契约 fixture 应通过语义校验");
+}
+
+#[test]
 fn contract_status_and_timestamps() {
     let yaml = contract_fixture();
     let bp: Blueprint = serde_yaml::from_str(&yaml).unwrap();

@@ -3,9 +3,9 @@ name: ci-rust
 on:
   push:
     branches: [main]
-    paths: ['packages/rust/**']
+    paths: ['packages/rust/**', 'tests/contract/**']
   pull_request:
-    paths: ['packages/rust/**']
+    paths: ['packages/rust/**', 'tests/contract/**']
 
 env:
   CARGO_TERM_COLOR: always
