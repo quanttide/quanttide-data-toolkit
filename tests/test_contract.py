@@ -45,9 +45,9 @@ def test_blueprint_fixture_structure():
 def test_specification_fixture_three_part():
     """Specification 三分契约（对齐 Rust 契约测试）。"""
     spec = load_fixture("specification.yaml")
-    assert spec["api_version"] == "qtcloud.quanttide.com/v1alpha1"
-    assert spec["kind"] == "Specification"
-    assert spec["metadata"]["name"] == "xmucpp"
+    assert spec["openapi"] == "3.1.0"
+    assert spec["info"]["title"] == "xmucpp"
+    assert spec["info"]["version"] == "1.0.0"
     # 三分平级：contract + blueprint + pipeline
     assert spec["spec"]["contract"]["input"]["schema"]
     assert spec["spec"]["blueprint"]["name"] == "xmucpp"

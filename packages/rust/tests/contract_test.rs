@@ -116,10 +116,10 @@ fn specification_three_part_parses() {
     // Specification 三分：contract + blueprint + pipeline 平级
     let yaml = specification_fixture();
     let spec: Specification = serde_yaml::from_str(&yaml).expect("specification.yaml 应可解析");
-    assert_eq!(spec.api_version, "qtcloud.quanttide.com/v1alpha1");
-    assert_eq!(spec.kind, "Specification");
-    assert_eq!(spec.metadata.name, "xmucpp");
-    assert_eq!(spec.metadata.generated_by, "qtcloud-data-cli");
+    assert_eq!(spec.openapi, "3.1.0");
+    assert_eq!(spec.info.title, "xmucpp");
+    assert_eq!(spec.info.version, "1.0.0");
+    assert_eq!(spec.info.generated_by.as_deref(), Some("qtcloud-data-cli"));
     // 三分都有内容
     assert!(!spec.spec.contract.input.schema.is_empty());
     assert_eq!(spec.spec.blueprint.name, "xmucpp");

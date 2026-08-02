@@ -10,12 +10,16 @@ pub mod pipeline;
 
 use serde::{Deserialize, Serialize};
 
-/// Specification 元数据：标识与来源（稳定，与 spec 内容分离——K8s 惯例）。
+/// Specification 元信息（OpenAPI `info` 风格）：标题 / 版本 / 描述 + 量潮扩展字段。
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct SpecificationMetadata {
-    pub name: String,
-    pub generated_by: String,
+pub struct SpecificationInfo {
+    pub title: String,
+    pub version: String,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    #[serde(rename = "x-generated-by", skip_serializing_if = "Option::is_none")]
+    pub generated_by: Option<String>,
+    #[serde(rename = "x-source-path", skip_serializing_if = "Option::is_none")]
     pub source_path: Option<String>,
 }
 
@@ -27,30 +31,33 @@ pub struct SpecificationContent {
     pub pipeline: pipeline::Pipeline,
 }
 
-/// Specification envelope（K8s 风格：apiVersion/kind/metadata/spec）。
+/// Specification envelope（OpenAPI 风格：openapi + info + 内容）。
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Specification {
-    pub api_version: String,
-    pub kind: String,
-    pub metadata: SpecificationMetadata,
+    /// OpenAPI 规范版本
+    pub openapi: String,
+    pub info: SpecificationInfo,
     pub spec: SpecificationContent,
 }
 
 impl Specification {
     pub fn new(
-        name: impl Into<String>,
+        title: impl Into<String>,
+        version: impl Into<String>,
         generated_by: impl Into<String>,
         source_path: Option<String>,
+        description: Option<String>,
         contract: contract::ContractPair,
         blueprint: blueprint::Blueprint,
         pipeline: pipeline::Pipeline,
     ) -> Self {
         Self {
-            api_version: "qtcloud.quanttide.com/v1alpha1".to_string(),
-            kind: "Specification".to_string(),
-            metadata: SpecificationMetadata {
-                name: name.into(),
-                generated_by: generated_by.into(),
+            openapi: "3.1.0".to_string(),
+            info: SpecificationInfo {
+                title: title.into(),
+                version: version.into(),
+                description,
+                generated_by: Some(generated_by.into()),
                 source_path,
             },
             spec: SpecificationContent {
@@ -62,18 +69,23 @@ impl Specification {
     }
 
     /// 从蓝图投影构造：blueprint + steps → pipeline 状态机，组合为 Specification。
+    #[allow(clippy::too_many_arguments)]
     pub fn from_blueprint(
-        name: impl Into<String>,
+        title: impl Into<String>,
+        version: impl Into<String>,
         generated_by: impl Into<String>,
         source_path: Option<String>,
+        description: Option<String>,
         contract: contract::ContractPair,
         blueprint: blueprint::Blueprint,
     ) -> Self {
         let pipeline = pipeline::Pipeline::from_blueprint(&blueprint.pipeline);
         Self::new(
-            name,
+            title,
+            version,
             generated_by,
             source_path,
+            description,
             contract,
             blueprint,
             pipeline,
@@ -115,11 +127,19 @@ mod tests {
     #[test]
     fn test_specification_three_part_structure() {
         let bp = sample_blueprint();
-        let spec =
-            Specification::from_blueprint("xmucpp", "test", None, ContractPair::default(), bp);
-        assert_eq!(spec.api_version, "qtcloud.quanttide.com/v1alpha1");
-        assert_eq!(spec.kind, "Specification");
-        assert_eq!(spec.metadata.name, "xmucpp");
+        let spec = Specification::from_blueprint(
+            "xmucpp",
+            "1.0.0",
+            "test",
+            None,
+            Some("电商价格数据库".to_string()),
+            ContractPair::default(),
+            bp,
+        );
+        assert_eq!(spec.openapi, "3.1.0");
+        assert_eq!(spec.info.title, "xmucpp");
+        assert_eq!(spec.info.version, "1.0.0");
+        assert_eq!(spec.info.generated_by.as_deref(), Some("test"));
         // 三分平级
         assert_eq!(spec.spec.blueprint.name, "xmucpp");
         assert_eq!(spec.spec.pipeline.start_at, "categorize");
@@ -131,12 +151,21 @@ mod tests {
     #[test]
     fn test_specification_roundtrip() {
         let bp = sample_blueprint();
-        let spec =
-            Specification::from_blueprint("xmucpp", "test", None, ContractPair::default(), bp);
+        let spec = Specification::from_blueprint(
+            "xmucpp",
+            "1.0.0",
+            "test",
+            None,
+            None,
+            ContractPair::default(),
+            bp,
+        );
         let yaml = serde_yaml::to_string(&spec).unwrap();
         let back: Specification = serde_yaml::from_str(&yaml).unwrap();
         assert_eq!(spec, back);
-        // 三分结构在序列化中保留
+        // OpenAPI 头 + 三分结构在序列化中保留
+        assert!(yaml.contains("openapi: 3.1.0"));
+        assert!(yaml.contains("title:"));
         assert!(yaml.contains("contract:"));
         assert!(yaml.contains("blueprint:"));
         assert!(yaml.contains("pipeline:"));

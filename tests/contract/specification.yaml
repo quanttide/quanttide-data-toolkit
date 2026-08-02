@@ -1,9 +1,10 @@
-api_version: qtcloud.quanttide.com/v1alpha1
-kind: Specification
-metadata:
-  name: xmucpp
-  generated_by: qtcloud-data-cli
-  source_path: examples/xmucpp/blueprint.yaml
+openapi: 3.1.0
+info:
+  title: xmucpp
+  version: "1.0.0"
+  description: 电商价格数据库（契约测试 fixture）
+  x-generated-by: qtcloud-data-cli
+  x-source-path: examples/xmucpp/blueprint.yaml
 spec:
   contract:
     input:

@@ -13,6 +13,6 @@ pub use requirement::datasource::{DataSources, SourceTable, UserFilter};
 pub use specification::blueprint::Blueprint;
 pub use specification::contract::{ColumnDef, Contract, PanelSpec};
 pub use specification::pipeline::{BlueprintSteps, Pipeline, PipelineState, StateType, Step};
-pub use specification::{Specification, SpecificationContent, SpecificationMetadata};
+pub use specification::{Specification, SpecificationContent, SpecificationInfo};
 pub use validate::validate;
 pub use validate::ValidationError;
