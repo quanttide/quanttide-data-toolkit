@@ -11,7 +11,7 @@ pub struct Step {
     pub depends: Option<Vec<String>>,
 }
 
-/// 处理蓝图：工作流步骤（数据流语义），pipeline 由 steps 投影生成（不存于此）。
+/// 数据蓝图：工作流步骤（数据流语义），pipeline 由 steps 投影生成（不存于此）。
 /// 名称/描述在 Specification.metadata（单一事实源，此处不重复）。
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Blueprint {
