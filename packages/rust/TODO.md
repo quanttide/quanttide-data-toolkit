@@ -1,6 +1,6 @@
 # TODO — quanttide-data（Rust 模型包）
 
-> 对应包：`quanttide-data` | 版本路线见 [ROADMAP.md](ROADMAP.md)（渐进式 4 阶段）
+> 对应包：`quanttide-data` | 版本路线见 [ROADMAP.md](docs/dev-guide/roadmap.md)（渐进式 4 阶段）
 > 原则：**加不加删、读取兼容、单一事实源先行、每步独立可发布**。
 
 ---

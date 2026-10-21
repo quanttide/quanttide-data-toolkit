@@ -7,7 +7,7 @@
 | 文档 | 用途 |
 |------|------|
 | [README.md](README.md) | 包定位、使用 |
-| [ROADMAP.md](ROADMAP.md) | v0.2.0 模型重构规划（对齐四层框架） |
+| [ROADMAP.md](docs/dev-guide/roadmap.md) | v0.2.0 模型重构规划（对齐四层框架） |
 | [CHANGELOG.md](CHANGELOG.md) | 版本变更记录（以 Git tag `rust/v*` 为准） |
 | 主仓 `docs/roadmap/quanttide-data-toolkit/rust.md` | 不一致分析与重构方案（详细） |
 
