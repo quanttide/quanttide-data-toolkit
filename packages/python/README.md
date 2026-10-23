@@ -1,6 +1,6 @@
 # `quanttide-data-python`
 
-量潮数据工程Python工具箱
+量潮数据工程Python标准库
 
 ## 安装
 
